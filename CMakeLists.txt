@@ -3,8 +3,6 @@ project(buba VERSION 0.1.0 LANGUAGES CXX)
 	
 ##### Configuration
 
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/output/lib)
-
 configure_file(config/README.in ${CMAKE_SOURCE_DIR}/README.md)
 
 ##### Source
