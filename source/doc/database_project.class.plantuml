@@ -1,0 +1,21 @@
+@startuml
+
+class Transaction {
+	Date date
+	String operation
+	Integer debitCredit
+}
+
+class Category {
+	String name
+	String description
+}
+
+class Label {
+	String name
+}
+
+Transaction -- Label
+Label -- Category
+
+@enduml

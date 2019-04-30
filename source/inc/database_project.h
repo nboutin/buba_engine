@@ -19,6 +19,10 @@ public:
     Database_Project(const std::string& pathname);
 
 private:
+    void create_table_operation();
+    void create_table_category();
+    void create_table_label();
+
     sqlite3* m_db;
 };
 }
