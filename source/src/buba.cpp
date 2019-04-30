@@ -7,6 +7,7 @@
 
 #include "buba.h"
 #include "database_project.h"
+#include "parser_ofx.h"
 
 using namespace buba;
 
@@ -17,4 +18,10 @@ bool Budget_Battle::create_project(const std::string& pathname)
 {
     m_dbp = std::make_unique<Database_Project>(pathname);
     return true;
+}
+
+bool Budget_Battle::import_ofx(const std::string& pathname)
+{
+	Parser_OFX parser(pathname);
+	return true;
 }

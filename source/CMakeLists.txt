@@ -3,6 +3,7 @@
 add_library(${PROJECT_NAME} SHARED
 	src/buba.cpp
 	src/database_project.cpp
+	src/parser_ofx.cpp
 )
 
 target_include_directories(${PROJECT_NAME} 
