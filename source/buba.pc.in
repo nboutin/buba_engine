@@ -8,5 +8,5 @@ Requires:
 Requires.private:
 Conflicts:
 Cflags: -I${includedir}/@PROJECT_NAME@
-Libs: -L${libdir} -l@PROJECT_NAME@
+Libs: -L${libdir} -l@PROJECT_NAME@ -lpthread -ldl
 Libs.private:
