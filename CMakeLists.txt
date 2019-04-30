@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.0)
-project(buba VERSION 0.1.0 LANGUAGES CXX)
+project(buba VERSION 0.1.0 LANGUAGES CXX C)
 	
 ##### Configuration
 

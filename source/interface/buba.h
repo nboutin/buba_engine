@@ -7,20 +7,23 @@
 
 #pragma once
 
-#include "database_project.h"
-
 #include <memory>
 #include <string>
 
 namespace buba
 {
+class Database_Project;
+
 class Budget_Battle
 {
 public:
-	bool create_project(const std::string& pathname);
-//	bool open_project();
+    Budget_Battle();
+    ~Budget_Battle();
+
+    bool create_project(const std::string& pathname);
+    //	bool open_project();
 
 private:
-	std::unique_ptr<Database_Project> m_dbp;
+    std::unique_ptr<Database_Project> m_dbp;
 };
 }

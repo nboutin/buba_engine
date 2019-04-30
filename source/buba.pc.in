@@ -2,10 +2,9 @@ libdir=@CMAKE_INSTALL_PREFIX@/lib
 includedir=@CMAKE_INSTALL_PREFIX@/include
 
 Name: @PROJECT_NAME@
-Description: component template description
+Description: TODO
 Version: @VERSION@
 Requires:
-# DELETE ME: A list of private packages required by this package but not exposed to applications.
 Requires.private:
 Conflicts:
 Cflags: -I${includedir}/@PROJECT_NAME@
