@@ -45,6 +45,6 @@ target_compile_options(sqlite3 PRIVATE -fPIC)
 target_include_directories(${PROJECT_NAME} PUBLIC external/sqlite3)
 target_link_libraries(${PROJECT_NAME} sqlite3)
 
-find_package(Boost 1.62.0 REQUIRED)
+find_package(Boost 1.58.0 REQUIRED)
 target_include_directories(${PROJECT_NAME} PUBLIC ${Boost_INCLUDE_DIRS})
 
