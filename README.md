@@ -1,18 +1,17 @@
-# BuBa_engine 0.1.0
+# BuBa_engine
 
-## Features 
-### Done
-* Import OFX (partially)
-* List all operations
+## Roadmap Features 
+### 0.2.0 [Not Started]
+- [ ] Assign amout to territory
 
-### Todo
-* Assign category to operation
-* Display monthly static of category percent
+### 0.1.0 [In Progress]
+- [ ] Create/Open Buba project
+- [ ] Import OFX (Transactions, Account, Bank)
+- [ ] List all transactions
+- [ ] Assign category to operation
+- [ ] Display monthly static of category percent
 
-
-## Developpement
-### Done
-* Add License file
-* Update all header file
-
-### Todo
+#### Dev
+- [ ] Add License file
+- [ ] Update all header file doxygen header
+- [ ] Rename table operation to transaction
