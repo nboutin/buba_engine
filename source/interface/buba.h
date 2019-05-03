@@ -9,10 +9,18 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace buba
 {
 class Database_Project;
+
+struct Operation_t
+{
+    std::string date;
+    std::string description;
+    double amount;
+};
 
 class Budget_Battle
 {
@@ -24,6 +32,8 @@ public:
     //	bool open_project();
 
     bool import_ofx(const std::string& pathname);
+
+    std::vector<Operation_t> get_operations_all() const;
 
 private:
     std::unique_ptr<Database_Project> m_dbp;
