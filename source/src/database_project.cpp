@@ -161,7 +161,7 @@ void Database_Project::create_table_operation()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
         return;
     }
@@ -170,7 +170,11 @@ void Database_Project::create_table_operation()
 void Database_Project::create_table_category()
 {
     auto r = sqlite3_exec(
-        m_db, "CREATE TABLE Category(name TEXT, description TEXT);", nullptr, nullptr, nullptr);
+        m_db,
+        "CREATE TABLE Category(name TEXT NOT NULL, PRIMARY KEY (name));",
+        nullptr,
+        nullptr,
+        nullptr);
 
     if(r != SQLITE_OK)
     {
@@ -182,7 +186,12 @@ void Database_Project::create_table_category()
 
 void Database_Project::create_table_label()
 {
-    auto r = sqlite3_exec(m_db, "CREATE TABLE Label(name TEXT);", nullptr, nullptr, nullptr);
+    auto r = sqlite3_exec(
+        m_db,
+        "CREATE TABLE Label(name TEXT NOT NULL, category_id INTEGER NOT NULL, PRIMARY KEY(name), FOREIGN KEY (category_id) REFERENCES Category(name));",
+        nullptr,
+        nullptr,
+        nullptr);
 
     if(r != SQLITE_OK)
     {
