@@ -1,9 +1,17 @@
-# BuBa_engine 0.1.0
+# BuBa_engine
 
-## ToDo
-* Add License file
-* Update all header file
+## Roadmap Features 
+### 0.2.0 [Not Started]
+- [ ] Assign amout to territory
 
-# DELETE ME
-This file is generated from config/README.in to become README.md<br/>
-To generate, execute: cmake -H. -Bbuild
+### 0.1.0 [In Progress]
+- [ ] Create/Open Buba project
+- [ ] Import OFX (Transactions, Account, Bank)
+- [ ] List all transactions
+- [ ] Assign category to operation
+- [ ] Display monthly static of category percent
+
+#### Dev
+- [ ] Add License file
+- [ ] Update all header file doxygen header
+- [ ] Rename table operation to transaction
