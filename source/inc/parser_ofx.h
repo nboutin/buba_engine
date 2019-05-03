@@ -4,6 +4,10 @@
 #include <string>
 #include <tuple>
 
+#include <boost/property_tree/ptree.hpp>
+
+namespace pt = boost::property_tree;
+
 namespace buba
 {
 class Parser_OFX
@@ -11,7 +15,9 @@ class Parser_OFX
 public:
     Parser_OFX(const std::string& pathname);
 
+    const pt::ptree& get_tree() const { return m_tree; }
+
 private:
-    std::tuple<std::string, std::string> parse_line(const std::string& line);
+    pt::ptree m_tree;
 };
 }

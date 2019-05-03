@@ -22,6 +22,12 @@ bool Budget_Battle::create_project(const std::string& pathname)
 
 bool Budget_Battle::import_ofx(const std::string& pathname)
 {
-	Parser_OFX parser(pathname);
-	return true;
+    Parser_OFX parser(pathname);
+
+    auto tree = parser.get_tree();
+
+    m_dbp->insert_operation("03052019", "description field", 123.45);
+    m_dbp->insert_operation("04052019", "description field again", -987.456);
+
+    return true;
 }

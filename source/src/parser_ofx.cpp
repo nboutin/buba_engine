@@ -7,11 +7,6 @@
 #include <set>
 #include <string>
 
-#include <boost/foreach.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/xml_parser.hpp>
-
-namespace pt = boost::property_tree;
 using namespace buba;
 using namespace std;
 
@@ -20,7 +15,6 @@ void print(const pt::ptree& tree);
 Parser_OFX::Parser_OFX(const std::string& pathname)
 {
     // Create empty property tree object
-    pt::ptree tree;
     string path_current;
 
     ifstream ifs(pathname);
@@ -49,22 +43,21 @@ Parser_OFX::Parser_OFX(const std::string& pathname)
                 else
                 {
                     auto leaf = path_current + "." + tag;
-                    cout << "leaf:" << leaf << ":" << value << endl;
-                    tree.add(leaf, value);
+                    //                    cout << "leaf:" << leaf << ":" << value << endl;
+                    m_tree.add(leaf, value);
                 }
             }
             else
             {
-                // a.b.c
                 auto tag     = line.substr(start2 + 1, end - 1);
                 auto n       = path_current.find_last_of('.');
                 path_current = path_current.substr(0, n);
-                cout << "close:" << path_current << endl;
+                //                cout << "close:" << path_current << endl;
             }
         }
     }
 
-    print(tree);
+    print(m_tree);
 }
 
 // struct ptree

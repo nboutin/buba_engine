@@ -17,12 +17,17 @@ class Database_Project
 {
 public:
     Database_Project(const std::string& pathname);
+    ~Database_Project();
+
+    bool
+    insert_operation(const std::string& date, const std::string& description, double debit_credit);
 
 private:
     void create_table_operation();
     void create_table_category();
     void create_table_label();
 
-    sqlite3* m_db;
+    sqlite3* m_db                         = nullptr;
+    sqlite3_stmt* m_stmt_insert_operation = nullptr;
 };
 }

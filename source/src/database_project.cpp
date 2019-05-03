@@ -29,16 +29,95 @@ Database_Project::Database_Project(const std::string& pathname)
     create_table_operation();
     create_table_category();
     create_table_label();
+
+    r = sqlite3_prepare_v2(
+        m_db,
+        "INSERT INTO Operation (date, description, debit_credit) VALUES (?1, ?2, ?3);",
+        -1,
+        &m_stmt_insert_operation,
+        nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+    }
+}
+
+Database_Project::~Database_Project()
+{
+    auto r = sqlite3_finalize(m_stmt_insert_operation);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+    }
+
+    r = sqlite3_close(m_db);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+    }
+}
+
+bool Database_Project::insert_operation(const std::string& date,
+                                        const std::string& description,
+                                        double debit_credit)
+{
+    auto r = sqlite3_reset(m_stmt_insert_operation);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    r = sqlite3_bind_text(m_stmt_insert_operation,
+                          1,
+                          date.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    r = sqlite3_bind_text(m_stmt_insert_operation,
+                          2,
+                          description.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    r = sqlite3_bind_double(m_stmt_insert_operation, 3, debit_credit);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    r = sqlite3_step(m_stmt_insert_operation);
+
+    if(r != SQLITE_DONE)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    return false;
 }
 
 void Database_Project::create_table_operation()
 {
-    auto r =
-        sqlite3_exec(m_db,
-                     "CREATE TABLE Operation(date TEXT, description TEXT, debit_credit INTEGER);",
-                     nullptr,
-                     nullptr,
-                     nullptr);
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Operation(date TEXT, description TEXT, debit_credit REAL);",
+                          nullptr,
+                          nullptr,
+                          nullptr);
 
     if(r != SQLITE_OK)
     {
@@ -50,12 +129,8 @@ void Database_Project::create_table_operation()
 
 void Database_Project::create_table_category()
 {
-    auto r =
-        sqlite3_exec(m_db,
-                     "CREATE TABLE Category(name TEXT, description TEXT);",
-                     nullptr,
-                     nullptr,
-                     nullptr);
+    auto r = sqlite3_exec(
+        m_db, "CREATE TABLE Category(name TEXT, description TEXT);", nullptr, nullptr, nullptr);
 
     if(r != SQLITE_OK)
     {
@@ -67,12 +142,7 @@ void Database_Project::create_table_category()
 
 void Database_Project::create_table_label()
 {
-    auto r =
-        sqlite3_exec(m_db,
-                     "CREATE TABLE Label(name TEXT);",
-                     nullptr,
-                     nullptr,
-                     nullptr);
+    auto r = sqlite3_exec(m_db, "CREATE TABLE Label(name TEXT);", nullptr, nullptr, nullptr);
 
     if(r != SQLITE_OK)
     {
