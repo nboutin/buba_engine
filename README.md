@@ -1,9 +1,18 @@
 # BuBa_engine 0.1.0
 
-## ToDo
+## Features 
+### Done
+* Import OFX (partially)
+* List all operations
+
+### Todo
+* Assign category to operation
+* Display monthly static of category percent
+
+
+## Developpement
+### Done
 * Add License file
 * Update all header file
 
-# DELETE ME
-This file is generated from config/README.in to become README.md<br/>
-To generate, execute: cmake -H. -Bbuild
+### Todo

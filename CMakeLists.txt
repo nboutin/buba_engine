@@ -3,7 +3,7 @@ project(buba VERSION 0.1.0 LANGUAGES CXX C)
 	
 ##### Configuration
 
-configure_file(config/README.in ${CMAKE_SOURCE_DIR}/README.md)
+#configure_file(config/README.in ${CMAKE_SOURCE_DIR}/README.md)
 
 ##### Source
 
