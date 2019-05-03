@@ -14,6 +14,12 @@
 using namespace buba;
 using namespace std;
 
+struct context_cb
+{
+    Database_Project* context = nullptr;
+    int (*cb)(int, char**, char**);
+};
+
 Database_Project::Database_Project(const std::string& pathname)
 {
     auto r = sqlite3_open_v2(
@@ -108,6 +114,41 @@ bool Database_Project::insert_operation(const std::string& date,
     }
 
     return false;
+}
+
+int Database_Project::get_operations_all_cb(void* context,
+                                            int n_column,
+                                            char** columns_data,
+                                            char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        vector<Operation_t>* operations = reinterpret_cast<vector<Operation_t>*>(context);
+        operations->push_back({columns_data[0], columns_data[1], strtod(columns_data[2], nullptr)});
+        return 0;
+    }
+    return 1;
+}
+
+std::vector<buba::Operation_t> Database_Project::get_operations_all()
+{
+    vector<Operation_t> operations;
+
+    auto r = sqlite3_exec(m_db,
+                          "SELECT * FROM Operation;",
+                          &Database_Project::get_operations_all_cb,
+                          &operations,
+                          nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+
+    return operations;
 }
 
 void Database_Project::create_table_operation()

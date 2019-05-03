@@ -57,3 +57,8 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
 
     return true;
 }
+
+std::vector<Operation_t> Budget_Battle::get_operations_all() const
+{
+    return m_dbp->get_operations_all();
+}
