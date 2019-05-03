@@ -20,7 +20,7 @@ public:
     ~Database_Project();
 
     bool
-    insert_operation(const std::string& date, const std::string& description, double debit_credit);
+    insert_operation(const std::string& date, const std::string& description, double amount);
 
 private:
     void create_table_operation();

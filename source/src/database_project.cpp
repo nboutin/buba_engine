@@ -30,12 +30,11 @@ Database_Project::Database_Project(const std::string& pathname)
     create_table_category();
     create_table_label();
 
-    r = sqlite3_prepare_v2(
-        m_db,
-        "INSERT INTO Operation (date, description, debit_credit) VALUES (?1, ?2, ?3);",
-        -1,
-        &m_stmt_insert_operation,
-        nullptr);
+    r = sqlite3_prepare_v2(m_db,
+                           "INSERT INTO Operation (date, description, amount) VALUES (?1, ?2, ?3);",
+                           -1,
+                           &m_stmt_insert_operation,
+                           nullptr);
 
     if(r != SQLITE_OK)
     {
@@ -60,7 +59,7 @@ Database_Project::~Database_Project()
 
 bool Database_Project::insert_operation(const std::string& date,
                                         const std::string& description,
-                                        double debit_credit)
+                                        double amount)
 {
     auto r = sqlite3_reset(m_stmt_insert_operation);
     if(r != SQLITE_OK)
@@ -93,7 +92,7 @@ bool Database_Project::insert_operation(const std::string& date,
         return false;
     }
 
-    r = sqlite3_bind_double(m_stmt_insert_operation, 3, debit_credit);
+    r = sqlite3_bind_double(m_stmt_insert_operation, 3, amount);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
@@ -114,7 +113,7 @@ bool Database_Project::insert_operation(const std::string& date,
 void Database_Project::create_table_operation()
 {
     auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE Operation(date TEXT, description TEXT, debit_credit REAL);",
+                          "CREATE TABLE Operation(date TEXT, description TEXT, amount REAL);",
                           nullptr,
                           nullptr,
                           nullptr);
