@@ -23,6 +23,8 @@ public:
     bool create_project(const std::string& pathname);
     //	bool open_project();
 
+    bool import_ofx(const std::string& pathname);
+
 private:
     std::unique_ptr<Database_Project> m_dbp;
 };
