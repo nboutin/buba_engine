@@ -9,6 +9,11 @@
 #include "database_project.h"
 #include "parser_ofx.h"
 
+#include <cstdlib>
+#include <iostream>
+#include <string>
+
+using namespace std;
 using namespace buba;
 
 Budget_Battle::Budget_Battle() {}
@@ -26,8 +31,29 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
 
     auto tree = parser.get_tree();
 
-    m_dbp->insert_operation("03052019", "description field", 123.45);
-    m_dbp->insert_operation("04052019", "description field again", -987.456);
+    auto operations_tree = tree.get_child("OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN");
+
+    string date, description;
+    double amount = 0;
+
+    for(auto i : operations_tree)
+    {
+        //        cout << "i:" << i.first << ":" << i.second.data() << endl;
+
+        if(i.first == "DTPOSTED")
+        {
+            date = i.second.data();
+        }
+        else if(i.first == "TRNAMT")
+        {
+            amount = strtod(i.second.data().c_str(), nullptr);
+        }
+        else if(i.first == "NAME")
+        {
+            description = i.second.data();
+            m_dbp->insert_operation(date, description, amount);
+        }
+    }
 
     return true;
 }

@@ -57,7 +57,7 @@ Parser_OFX::Parser_OFX(const std::string& pathname)
         }
     }
 
-    print(m_tree);
+    //    print(m_tree);
 }
 
 // struct ptree
