@@ -1,21 +1,37 @@
 @startuml
 
-class Transaction {
-	Date date
-	String operation
-	Integer debitCredit
+class Bank {
+	name: TEXT [PK][NOT NULL]
 }
 
-class Category {
-	String name
-	String description
+class Account {
+	number: INTEGER [PK][NOT NULL]
+	name: TEXT
+	bank_name: TEXT [FK]
+}
+
+class Transaction {
+	date: TEXT
+	description: TEXT
+	amount: REAL
+	account_number: INTEGER [FK]
+	category_name: TEXT [FK]
 }
 
 class Label {
-	String name
+	name: TEXT [PK]
+	category_name: TEXT [FK]
 }
 
-Transaction -- Label
-Label -- Category
+class Category {
+	name: TEXT [PK]
+	description: TEXT
+}
+
+
+Bank "1" -- "0..*" Account
+Account "1" -- "0..*" Transaction
+Transaction "0..*" -- "1" Category
+Label "0..*" -- "1" Category
 
 @enduml

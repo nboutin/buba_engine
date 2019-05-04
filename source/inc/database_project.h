@@ -31,6 +31,8 @@ private:
     void create_table_operation();
     void create_table_category();
     void create_table_label();
+    void create_table_bank();
+    void create_table_account();
 
     static int get_operations_all_cb(void*, int, char**, char**);
 
