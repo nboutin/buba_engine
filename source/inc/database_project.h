@@ -16,10 +16,13 @@
 
 namespace buba
 {
+enum class db_connection_e { OPEN, CREATE };
+
 class Database_Project
 {
 public:
-    Database_Project(const std::string& pathname);
+    Database_Project(const std::string& pathname,
+                     db_connection_e connection = db_connection_e::CREATE);
     ~Database_Project();
 
     bool insert_transaction(const std::string& date, const std::string& description, double amount);
@@ -36,7 +39,7 @@ private:
 
     static int get_transactions_all_cb(void*, int, char**, char**);
 
-    sqlite3* m_db                         = nullptr;
+    sqlite3* m_db                           = nullptr;
     sqlite3_stmt* m_stmt_insert_transaction = nullptr;
 };
 }

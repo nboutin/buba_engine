@@ -25,6 +25,12 @@ bool Budget_Battle::create_project(const std::string& pathname)
     return true;
 }
 
+bool Budget_Battle::open_project(const std::string& pathname)
+{
+    m_dbp = std::make_unique<Database_Project>(pathname, db_connection_e::OPEN);
+    return true;
+}
+
 bool Budget_Battle::import_ofx(const std::string& pathname)
 {
     Parser_OFX parser(pathname);
