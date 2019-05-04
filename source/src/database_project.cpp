@@ -35,6 +35,8 @@ Database_Project::Database_Project(const std::string& pathname)
     create_table_operation();
     create_table_category();
     create_table_label();
+    create_table_bank();
+    create_table_account();
 
     r = sqlite3_prepare_v2(m_db,
                            "INSERT INTO Operation (date, description, amount) VALUES (?1, ?2, ?3);",
@@ -154,7 +156,16 @@ std::vector<buba::Operation_t> Database_Project::get_operations_all()
 void Database_Project::create_table_operation()
 {
     auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE Operation(date TEXT, description TEXT, amount REAL);",
+                          "CREATE TABLE Operation("
+                          "date TEXT, "
+                          "description TEXT, "
+                          "amount REAL, "
+                          "account_number INTEGER, "
+                          "category_name TEXT, "
+                          //"PRIMARY KEY(), "
+                          "FOREIGN KEY (account_number) REFERENCES Account(number), "
+                          "FOREIGN KEY (category_name) REFERENCES Category(name)"
+                          ");",
                           nullptr,
                           nullptr,
                           nullptr);
@@ -163,40 +174,82 @@ void Database_Project::create_table_operation()
     {
         cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
-        return;
     }
 }
 
 void Database_Project::create_table_category()
 {
-    auto r = sqlite3_exec(
-        m_db,
-        "CREATE TABLE Category(name TEXT NOT NULL, PRIMARY KEY (name));",
-        nullptr,
-        nullptr,
-        nullptr);
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Category("
+                          "name TEXT NOT NULL, "
+                          "PRIMARY KEY (name)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
 
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
-        return;
     }
 }
 
 void Database_Project::create_table_label()
 {
-    auto r = sqlite3_exec(
-        m_db,
-        "CREATE TABLE Label(name TEXT NOT NULL, category_id INTEGER NOT NULL, PRIMARY KEY(name), FOREIGN KEY (category_id) REFERENCES Category(name));",
-        nullptr,
-        nullptr,
-        nullptr);
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Label("
+                          "name TEXT NOT NULL, "
+                          "category_id INTEGER NOT NULL, "
+                          "PRIMARY KEY(name), "
+                          "FOREIGN KEY (category_id) REFERENCES Category(name)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
 
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
-        return;
+    }
+}
+
+void Database_Project::create_table_bank()
+{
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Bank ("
+                          "name TEXT NOT NULL, "
+                          "PRIMARY KEY(name)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errmsg(m_db) << endl;
+        sqlite3_close(m_db);
+    }
+}
+
+void Database_Project::create_table_account()
+{
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Account ("
+                          "number INTEGER NOT NULL, "
+                          "name TEXT, "
+                          "bank_name TEXT, "
+                          "PRIMARY KEY(number), "
+                          "FOREIGN KEY(bank_name) REFERENCES Bank(name)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errmsg(m_db) << endl;
+        sqlite3_close(m_db);
     }
 }

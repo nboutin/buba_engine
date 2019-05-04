@@ -1,21 +1,26 @@
 @startuml
 
 class Bank {
-	name: TEXT [PK]
+	name: TEXT [PK][NOT NULL]
 }
 
 class Account {
-	name: TEXT [PK]
+	number: INTEGER [PK][NOT NULL]
+	name: TEXT
+	bank_name: TEXT [FK]
 }
 
 class Transaction {
 	date: TEXT
 	description: TEXT
 	amount: REAL
+	account_number: INTEGER [FK]
+	category_name: TEXT [FK]
 }
 
 class Label {
 	name: TEXT [PK]
+	category_name: TEXT [FK]
 }
 
 class Category {
