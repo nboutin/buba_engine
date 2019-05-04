@@ -14,13 +14,7 @@
 using namespace buba;
 using namespace std;
 
-struct context_cb
-{
-    Database_Project* context = nullptr;
-    int (*cb)(int, char**, char**);
-};
-
-Database_Project::Database_Project(const std::string& pathname)
+Database_Project::Database_Project(const std::string& pathname, db_connection_e connection)
 {
     auto r = sqlite3_open_v2(
         pathname.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
@@ -32,11 +26,14 @@ Database_Project::Database_Project(const std::string& pathname)
         return;
     }
 
-    create_table_transaction();
-    create_table_category();
-    create_table_label();
-    create_table_bank();
-    create_table_account();
+    if(connection == db_connection_e::CREATE)
+    {
+        create_table_transaction();
+        create_table_category();
+        create_table_label();
+        create_table_bank();
+        create_table_account();
+    }
 
     r = sqlite3_prepare_v2(m_db,
                            "INSERT INTO [Transaction] "

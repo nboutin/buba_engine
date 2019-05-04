@@ -29,7 +29,7 @@ public:
     ~Budget_Battle();
 
     bool create_project(const std::string& pathname);
-    //	bool open_project();
+    bool open_project(const std::string& pathname);
 
     bool import_ofx(const std::string& pathname);
 
