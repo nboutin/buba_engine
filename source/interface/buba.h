@@ -15,7 +15,7 @@ namespace buba
 {
 class Database_Project;
 
-struct Operation_t
+struct Transaction_t
 {
     std::string date;
     std::string description;
@@ -33,7 +33,7 @@ public:
 
     bool import_ofx(const std::string& pathname);
 
-    std::vector<Operation_t> get_operations_all() const;
+    std::vector<Transaction_t> get_transactions_all() const;
 
 private:
     std::unique_ptr<Database_Project> m_dbp;

@@ -32,27 +32,29 @@ Database_Project::Database_Project(const std::string& pathname)
         return;
     }
 
-    create_table_operation();
+    create_table_transaction();
     create_table_category();
     create_table_label();
     create_table_bank();
     create_table_account();
 
     r = sqlite3_prepare_v2(m_db,
-                           "INSERT INTO Operation (date, description, amount) VALUES (?1, ?2, ?3);",
+                           "INSERT INTO [Transaction] "
+                           "(date, description, amount) "
+                           "VALUES (?1, ?2, ?3);",
                            -1,
-                           &m_stmt_insert_operation,
+                           &m_stmt_insert_transaction,
                            nullptr);
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
     }
 }
 
 Database_Project::~Database_Project()
 {
-    auto r = sqlite3_finalize(m_stmt_insert_operation);
+    auto r = sqlite3_finalize(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
@@ -65,18 +67,18 @@ Database_Project::~Database_Project()
     }
 }
 
-bool Database_Project::insert_operation(const std::string& date,
-                                        const std::string& description,
-                                        double amount)
+bool Database_Project::insert_transaction(const std::string& date,
+                                          const std::string& description,
+                                          double amount)
 {
-    auto r = sqlite3_reset(m_stmt_insert_operation);
+    auto r = sqlite3_reset(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
-    r = sqlite3_bind_text(m_stmt_insert_operation,
+    r = sqlite3_bind_text(m_stmt_insert_transaction,
                           1,
                           date.c_str(),
                           -1,
@@ -88,7 +90,7 @@ bool Database_Project::insert_operation(const std::string& date,
         return false;
     }
 
-    r = sqlite3_bind_text(m_stmt_insert_operation,
+    r = sqlite3_bind_text(m_stmt_insert_transaction,
                           2,
                           description.c_str(),
                           -1,
@@ -100,14 +102,14 @@ bool Database_Project::insert_operation(const std::string& date,
         return false;
     }
 
-    r = sqlite3_bind_double(m_stmt_insert_operation, 3, amount);
+    r = sqlite3_bind_double(m_stmt_insert_transaction, 3, amount);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
-    r = sqlite3_step(m_stmt_insert_operation);
+    r = sqlite3_step(m_stmt_insert_transaction);
 
     if(r != SQLITE_DONE)
     {
@@ -118,31 +120,31 @@ bool Database_Project::insert_operation(const std::string& date,
     return false;
 }
 
-int Database_Project::get_operations_all_cb(void* context,
-                                            int n_column,
-                                            char** columns_data,
-                                            char** columns_name)
+int Database_Project::get_transactions_all_cb(void* context,
+                                              int n_column,
+                                              char** columns_data,
+                                              char** columns_name)
 {
     (void) n_column;
     (void) columns_name;
 
     if(context != nullptr)
     {
-        vector<Operation_t>* operations = reinterpret_cast<vector<Operation_t>*>(context);
+        vector<Transaction_t>* operations = reinterpret_cast<vector<Transaction_t>*>(context);
         operations->push_back({columns_data[0], columns_data[1], strtod(columns_data[2], nullptr)});
         return 0;
     }
     return 1;
 }
 
-std::vector<buba::Operation_t> Database_Project::get_operations_all()
+std::vector<buba::Transaction_t> Database_Project::get_transactions_all()
 {
-    vector<Operation_t> operations;
+    vector<Transaction_t> transaction;
 
     auto r = sqlite3_exec(m_db,
-                          "SELECT * FROM Operation;",
-                          &Database_Project::get_operations_all_cb,
-                          &operations,
+                          "SELECT * FROM [Transaction];",
+                          &Database_Project::get_transactions_all_cb,
+                          &transaction,
                           nullptr);
     if(r != SQLITE_OK)
     {
@@ -150,13 +152,13 @@ std::vector<buba::Operation_t> Database_Project::get_operations_all()
         return {};
     }
 
-    return operations;
+    return transaction;
 }
 
-void Database_Project::create_table_operation()
+void Database_Project::create_table_transaction()
 {
     auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE Operation("
+                          "CREATE TABLE [Transaction]("
                           "date TEXT, "
                           "description TEXT, "
                           "amount REAL, "
@@ -190,7 +192,7 @@ void Database_Project::create_table_category()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
     }
 }
@@ -228,7 +230,7 @@ void Database_Project::create_table_bank()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
     }
 }
@@ -249,7 +251,7 @@ void Database_Project::create_table_account()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
     }
 }

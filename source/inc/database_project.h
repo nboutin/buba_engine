@@ -22,21 +22,21 @@ public:
     Database_Project(const std::string& pathname);
     ~Database_Project();
 
-    bool insert_operation(const std::string& date, const std::string& description, double amount);
+    bool insert_transaction(const std::string& date, const std::string& description, double amount);
 
     // TODO return a map ?
-    std::vector<Operation_t> get_operations_all();
+    std::vector<Transaction_t> get_transactions_all();
 
 private:
-    void create_table_operation();
+    void create_table_transaction();
     void create_table_category();
     void create_table_label();
     void create_table_bank();
     void create_table_account();
 
-    static int get_operations_all_cb(void*, int, char**, char**);
+    static int get_transactions_all_cb(void*, int, char**, char**);
 
     sqlite3* m_db                         = nullptr;
-    sqlite3_stmt* m_stmt_insert_operation = nullptr;
+    sqlite3_stmt* m_stmt_insert_transaction = nullptr;
 };
 }

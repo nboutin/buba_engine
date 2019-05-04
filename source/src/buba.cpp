@@ -51,14 +51,14 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
         else if(i.first == "NAME")
         {
             description = i.second.data();
-            m_dbp->insert_operation(date, description, amount);
+            m_dbp->insert_transaction(date, description, amount);
         }
     }
 
     return true;
 }
 
-std::vector<Operation_t> Budget_Battle::get_operations_all() const
+std::vector<Transaction_t> Budget_Battle::get_transactions_all() const
 {
-    return m_dbp->get_operations_all();
+    return m_dbp->get_transactions_all();
 }
