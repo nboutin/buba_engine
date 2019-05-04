@@ -3,6 +3,8 @@
 ## Roadmap Features 
 ### 0.2.0 [Not Started]
 - [ ] Assign amout to territory
+- [ ] Synchro with online bank
+- [ ] Automatic category assignement for transaction
 
 ### 0.1.0 [In Progress]
 - [ ] Create/Open Buba project
@@ -14,4 +16,4 @@
 #### Dev
 - [ ] Add License file
 - [ ] Update all header file doxygen header
-- [ ] Rename table operation to transaction
+- [x] Rename table operation to transaction
