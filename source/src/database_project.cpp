@@ -37,14 +37,15 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
 
     r = sqlite3_prepare_v2(m_db,
                            "INSERT INTO [Transaction] "
-                           "(date, description, amount) "
-                           "VALUES (?1, ?2, ?3);",
+                           "(fitid, date, description, amount) "
+                           "VALUES (?1, ?2, ?3, ?4);",
                            -1,
                            &m_stmt_insert_transaction,
                            nullptr);
 
     if(r != SQLITE_OK)
     {
+        // TODO sqlite3_errstr ??
         cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
     }
 }
@@ -64,7 +65,8 @@ Database_Project::~Database_Project()
     }
 }
 
-bool Database_Project::insert_transaction(const std::string& date,
+bool Database_Project::insert_transaction(const std::string& fitid,
+                                          const std::string& date,
                                           const std::string& description,
                                           double amount)
 {
@@ -75,63 +77,59 @@ bool Database_Project::insert_transaction(const std::string& date,
         return false;
     }
 
+    // FITID
     r = sqlite3_bind_text(m_stmt_insert_transaction,
                           1,
+                          fitid.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // Date
+    r = sqlite3_bind_text(m_stmt_insert_transaction,
+                          2,
                           date.c_str(),
                           -1,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
-
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
+    // Description
     r = sqlite3_bind_text(m_stmt_insert_transaction,
-                          2,
+                          3,
                           description.c_str(),
                           -1,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
-
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
-    r = sqlite3_bind_double(m_stmt_insert_transaction, 3, amount);
+    // Amount
+    r = sqlite3_bind_double(m_stmt_insert_transaction, 4, amount);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
+    // Execute
     r = sqlite3_step(m_stmt_insert_transaction);
-
     if(r != SQLITE_DONE)
     {
         cerr << sqlite3_errstr(r) << endl;
         return false;
     }
 
-    return false;
-}
-
-int Database_Project::get_transactions_all_cb(void* context,
-                                              int n_column,
-                                              char** columns_data,
-                                              char** columns_name)
-{
-    (void) n_column;
-    (void) columns_name;
-
-    if(context != nullptr)
-    {
-        vector<Transaction_t>* operations = reinterpret_cast<vector<Transaction_t>*>(context);
-        operations->push_back({columns_data[0], columns_data[1], strtod(columns_data[2], nullptr)});
-        return 0;
-    }
-    return 1;
+    return true;
 }
 
 std::vector<buba::Transaction_t> Database_Project::get_transactions_all()
@@ -152,16 +150,36 @@ std::vector<buba::Transaction_t> Database_Project::get_transactions_all()
     return transaction;
 }
 
+int Database_Project::get_transactions_all_cb(void* context,
+                                              int n_column,
+                                              char** columns_data,
+                                              char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        // TODO Add check on columns_name
+        vector<Transaction_t>* operations = reinterpret_cast<vector<Transaction_t>*>(context);
+        operations->push_back(
+            {columns_data[0], columns_data[1], columns_data[2], strtod(columns_data[3], nullptr)});
+        return 0;
+    }
+    return 1;
+}
+
 void Database_Project::create_table_transaction()
 {
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE [Transaction]("
+                          "fitid TEXT NOT NULL, "
                           "date TEXT, "
                           "description TEXT, "
                           "amount REAL, "
                           "account_number INTEGER, "
                           "category_name TEXT, "
-                          //"PRIMARY KEY(), "
+                          "PRIMARY KEY(fitid), "
                           "FOREIGN KEY (account_number) REFERENCES Account(number), "
                           "FOREIGN KEY (category_name) REFERENCES Category(name)"
                           ");",

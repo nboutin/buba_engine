@@ -25,7 +25,10 @@ public:
                      db_connection_e connection = db_connection_e::CREATE);
     ~Database_Project();
 
-    bool insert_transaction(const std::string& date, const std::string& description, double amount);
+    bool insert_transaction(const std::string& fitid,
+                            const std::string& date,
+                            const std::string& description,
+                            double amount);
 
     // TODO return a map ?
     std::vector<Transaction_t> get_transactions_all();

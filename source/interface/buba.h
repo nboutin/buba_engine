@@ -17,6 +17,7 @@ class Database_Project;
 
 struct Transaction_t
 {
+	std::string fitid;
     std::string date;
     std::string description;
     double amount;

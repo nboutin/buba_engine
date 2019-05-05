@@ -11,6 +11,8 @@ class Account {
 }
 
 class Transaction {
+	'Financial Institut Transaction ID
+	FITID: TEXT [PK][NOT NULL]
 	date: TEXT
 	description: TEXT
 	amount: REAL

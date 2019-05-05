@@ -3,4 +3,4 @@ output
 install
 doc/html/
 *.ofx
-
+.~*
