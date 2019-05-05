@@ -35,19 +35,7 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
         create_table_account();
     }
 
-    r = sqlite3_prepare_v2(m_db,
-                           "INSERT INTO [Transaction] "
-                           "(fitid, date, description, amount) "
-                           "VALUES (?1, ?2, ?3, ?4);",
-                           -1,
-                           &m_stmt_insert_transaction,
-                           nullptr);
-
-    if(r != SQLITE_OK)
-    {
-        // TODO sqlite3_errstr ??
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
-    }
+    prepare_statements();
 }
 
 Database_Project::~Database_Project()
@@ -63,6 +51,43 @@ Database_Project::~Database_Project()
     {
         cerr << sqlite3_errstr(r) << endl;
     }
+}
+
+bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
+{
+    auto r = sqlite3_reset(m_stmt_insert_bank);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // id
+    r = sqlite3_bind_int(m_stmt_insert_bank, 1, id);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // name
+    r = sqlite3_bind_text(
+        m_stmt_insert_bank, 2, name.c_str(), -1, reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // Execute
+    r = sqlite3_step(m_stmt_insert_bank);
+    if(r != SQLITE_DONE)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    return true;
 }
 
 bool Database_Project::insert_transaction(const std::string& fitid,
@@ -236,8 +261,9 @@ void Database_Project::create_table_bank()
 {
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Bank ("
-                          "name TEXT NOT NULL, "
-                          "PRIMARY KEY(name)"
+                          "id INTEGER NOT NULL, "
+                          "name TEXT, "
+                          "PRIMARY KEY(id)"
                           ");",
                           nullptr,
                           nullptr,
@@ -256,9 +282,9 @@ void Database_Project::create_table_account()
                           "CREATE TABLE Account ("
                           "number INTEGER NOT NULL, "
                           "name TEXT, "
-                          "bank_name TEXT, "
+                          "bank_id INTEGER, "
                           "PRIMARY KEY(number), "
-                          "FOREIGN KEY(bank_name) REFERENCES Bank(name)"
+                          "FOREIGN KEY(bank_id) REFERENCES Bank(id)"
                           ");",
                           nullptr,
                           nullptr,
@@ -268,5 +294,35 @@ void Database_Project::create_table_account()
     {
         cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
+    }
+}
+
+void Database_Project::prepare_statements()
+{
+    auto r = sqlite3_prepare_v2(m_db,
+                                "INSERT INTO Bank"
+                                "(id, name)"
+                                "VALUES(?1, ?2);",
+                                -1,
+                                &m_stmt_insert_bank,
+                                nullptr);
+    if(r != SQLITE_OK)
+    {
+        // TODO sqlite3_errstr ??
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+    }
+
+    r = sqlite3_prepare_v2(m_db,
+                           "INSERT INTO [Transaction] "
+                           "(fitid, date, description, amount) "
+                           "VALUES (?1, ?2, ?3, ?4);",
+                           -1,
+                           &m_stmt_insert_transaction,
+                           nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        // TODO sqlite3_errstr ??
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
     }
 }

@@ -37,34 +37,71 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
 
     auto tree = parser.get_tree();
 
-    auto operations_tree = tree.get_child("OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN");
+    auto stmttrnrs = tree.get_child("OFX.BANKMSGSRSV1.STMTTRNRS");
 
-    string fitid, date, description;
-    double amount = 0;
-
-    for(auto i : operations_tree)
+    for(auto a : stmttrnrs)
     {
-        //        cout << "i:" << i.first << ":" << i.second.data() << endl;
+        cout << "a:" << a.first << ":" << a.second.data() << endl;
 
-        if(i.first == "FITID")
+        if(a.first == "STMTRS")
         {
-            fitid = i.second.data();
-        }
-        else if(i.first == "DTPOSTED")
-        {
-            date = i.second.data();
-        }
-        else if(i.first == "TRNAMT")
-        {
-            amount = strtod(i.second.data().c_str(), nullptr);
-        }
-        // Hopefully NAME is last in STMTTRN structure
-        else if(i.first == "NAME")
-        {
-            description = i.second.data();
-            m_dbp->insert_transaction(fitid, date, description, amount);
+            for(auto b : a.second)
+            {
+                cout << "b:" << b.first << ":" << b.second.data() << endl;
+
+                if(b.first == "BANKACCTFROM")
+                {
+                    auto branch = b.second.get("BRANCH", "");
+                    cout << "branch:" << branch << endl;
+
+                    auto branchid = b.second.get("BRANCHID", "");
+                    cout << "branchid:" << branchid << endl;
+
+                    m_dbp->insert_bank(stoi(branchid));
+
+                    auto acctid = b.second.get("ACCTID", "");
+                }
+                else if(b.first == "BANKTRANLIST")
+                {
+                    for(auto c : b.second)
+                    {
+                        cout << "c:" << c.first << ":" << c.second.data() << endl;
+                    }
+                }
+            }
         }
     }
+
+#if 0
+	auto operations_tree = tree.get_child("OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN");
+
+	string fitid, date, description;
+	double amount = 0;
+
+	for(auto i : operations_tree)
+	{
+		//        cout << "i:" << i.first << ":" << i.second.data() << endl;
+
+		if(i.first == "FITID")
+		{
+			fitid = i.second.data();
+		}
+		else if(i.first == "DTPOSTED")
+		{
+			date = i.second.data();
+		}
+		else if(i.first == "TRNAMT")
+		{
+			amount = strtod(i.second.data().c_str(), nullptr);
+		}
+		// Hopefully NAME is last in STMTTRN structure
+		else if(i.first == "NAME")
+		{
+			description = i.second.data();
+			m_dbp->insert_transaction(fitid, date, description, amount);
+		}
+	}
+#endif
 
     return true;
 }
