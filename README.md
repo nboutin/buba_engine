@@ -7,7 +7,7 @@
 - [ ] Automatic category assignement for transaction
 
 ### 0.1.0 [In Progress]
-- [ ] Create/Open Buba project
+- [x] Create/Open Buba project
 - [ ] Import OFX (Transactions, Account, Bank)
 - [ ] List all transactions
 - [ ] Assign category to operation
@@ -16,4 +16,5 @@
 #### Dev
 - [ ] Add License file
 - [ ] Update all header file doxygen header
+- [ ] Add unit test
 - [x] Rename table operation to transaction
