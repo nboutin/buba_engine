@@ -221,6 +221,37 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     return true;
 }
 
+int get_banks_cb(void* context, int n_column, char** columns_data, char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        // TODO Add check on columns_name
+        vector<Bank_t>* banks = reinterpret_cast<vector<Bank_t>*>(context);
+
+        std::uint32_t id = std::stoi(columns_data[0]);
+        banks->push_back({id, columns_data[1]});
+        return 0;
+    }
+    return 1;
+}
+
+std::vector<Bank_t> Database_Project::get_banks()
+{
+    vector<Bank_t> banks;
+
+    auto r = sqlite3_exec(m_db, "SELECT * FROM Bank;", &get_banks_cb, &banks, nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+    return banks;
+}
+
 std::vector<buba::Transaction_t> Database_Project::get_transactions_all()
 {
     vector<Transaction_t> transaction;

@@ -40,6 +40,8 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
     return true;
 }
 
+std::vector<Bank_t> Budget_Battle::get_banks() const { return m_dbp->get_banks(); }
+
 std::vector<Transaction_t> Budget_Battle::get_transactions_all() const
 {
     return m_dbp->get_transactions_all();
