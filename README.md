@@ -17,4 +17,26 @@
 - [ ] Add License file
 - [ ] Update all header file doxygen header
 - [ ] Add unit test
+- [ ] Add logging mechanism
 - [x] Rename table operation to transaction
+
+## How To
+### Configure
+```sh
+cmake -H. -Bbuild
+```
+
+### Build
+```sh
+cmake --build build -- -j 4
+```
+
+### Install
+```sh
+sudo cmake --build build --target install
+```
+
+### Test
+```sh
+cmake --build build --target test
+```
