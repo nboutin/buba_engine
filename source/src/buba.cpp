@@ -80,6 +80,14 @@ bool Budget_Battle::set_account_name(const std::string& number, const std::strin
     return m_dbp->set_account_name(number, name);
 }
 
+std::vector<Label_t> Budget_Battle::get_labels() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_labels();
+}
+
 bool Budget_Battle::add_label(const std::string& name)
 {
     if(!m_dbp)

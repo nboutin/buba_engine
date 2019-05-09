@@ -320,6 +320,39 @@ std::vector<buba::Transaction_t> Database_Project::get_transactions()
     return transactions;
 }
 
+int get_labels_cb(void* context, int n_column, char** columns_data, char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        // TODO Add check on columns_name
+        vector<Label_t>* labels = reinterpret_cast<vector<Label_t>*>(context);
+
+        std::string name          = columns_data[0];
+        std::string category_name = (columns_data[1] == nullptr) ? "" : columns_data[1];
+
+        labels->push_back({name, category_name});
+        return 0;
+    }
+    return 1;
+}
+
+std::vector<Label_t> Database_Project::get_labels()
+{
+    vector<Label_t> labels;
+
+    auto r = sqlite3_exec(m_db, "SELECT * FROM Label;", &get_labels_cb, &labels, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+
+    return labels;
+}
+
 bool Database_Project::set_bank_name(std::uint32_t id, const std::string& name)
 {
     auto request = "UPDATE Bank SET name='" + name + "' WHERE id=" + std::to_string(id) + ";";
