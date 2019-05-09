@@ -32,10 +32,15 @@ int account_cb(const struct OfxAccountData data, void* context)
 {
     Database_Project* dbp = reinterpret_cast<Database_Project*>(context);
 
-    //    cout << "|" << data.bank_id << "|" << data.broker_id << "|" << data.branch_id << "|"
-    //         << data.account_id << "|" << data.account_name << "|" << data.account_number << endl;
+    cout << "|" << data.bank_id << "|" << data.broker_id << "|" << data.branch_id << "|"
+         << data.account_id << "|" << data.account_name << "|" << data.account_number << endl;
 
-    dbp->insert_bank(std::stoi(std::string(data.branch_id)));
+    int bank_id = std::stoi(data.branch_id);
+    dbp->insert_bank(bank_id, "");
+
+    // 33 333 333 333
+//    int account_number = std::stoi(data.account_number);
+    dbp->insert_account(data.account_number, "", bank_id);
 
     return 0;
 }

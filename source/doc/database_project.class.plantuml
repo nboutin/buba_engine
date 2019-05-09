@@ -6,7 +6,7 @@ class Bank {
 }
 
 class Account {
-	number: INTEGER [PK][NOT NULL]
+	number: TEXT [PK][NOT NULL]
 	name: TEXT
 	bank_id: INTEGER [FK]
 }

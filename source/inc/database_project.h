@@ -25,7 +25,9 @@ public:
                      db_connection_e connection = db_connection_e::CREATE);
     ~Database_Project();
 
-    bool insert_bank(std::uint32_t id, const std::string& name = "");
+    bool insert_bank(std::uint32_t id, const std::string& name);
+
+    bool insert_account(const std::string& number, const std::string& name, std::uint32_t bank_id);
 
     bool insert_transaction(const std::string& fitid,
                             const std::string& date,
@@ -47,7 +49,8 @@ private:
     static int get_transactions_all_cb(void*, int, char**, char**);
 
     sqlite3* m_db                           = nullptr;
+    sqlite3_stmt* m_stmt_insert_bank        = nullptr;
+    sqlite3_stmt* m_stmt_insert_account     = nullptr;
     sqlite3_stmt* m_stmt_insert_transaction = nullptr;
-    sqlite3_stmt* m_stmt_insert_bank = nullptr;
 };
 }

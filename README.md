@@ -9,6 +9,8 @@
 ### 0.1.0 [In Progress]
 - [x] Create/Open Buba project
 - [ ] Import OFX (Transactions, Account, Bank)
+- [ ] Set bank name interface
+- [ ] Set account name interface
 - [ ] List all transactions
 - [ ] Assign category to operation
 - [ ] Display monthly static of category percent

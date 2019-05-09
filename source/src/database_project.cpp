@@ -90,6 +90,57 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     return true;
 }
 
+bool Database_Project::insert_account(const std::string& number,
+                                      const std::string& name,
+                                      std::uint32_t bank_id)
+{
+    auto r = sqlite3_reset(m_stmt_insert_account);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // number
+    r = sqlite3_bind_text(m_stmt_insert_account,
+                          1,
+                          number.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // name
+    r = sqlite3_bind_text(
+        m_stmt_insert_account, 2, name.c_str(), -1, reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // bank_id
+    r = sqlite3_bind_int(m_stmt_insert_account, 3, bank_id);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // Execute
+    r = sqlite3_step(m_stmt_insert_account);
+    if(r != SQLITE_DONE)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    return true;
+}
+
 bool Database_Project::insert_transaction(const std::string& fitid,
                                           const std::string& date,
                                           const std::string& description,
@@ -280,7 +331,7 @@ void Database_Project::create_table_account()
 {
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Account ("
-                          "number INTEGER NOT NULL, "
+                          "number TEXT NOT NULL, "
                           "name TEXT, "
                           "bank_id INTEGER, "
                           "PRIMARY KEY(number), "
@@ -299,6 +350,7 @@ void Database_Project::create_table_account()
 
 void Database_Project::prepare_statements()
 {
+    // Bank
     auto r = sqlite3_prepare_v2(m_db,
                                 "INSERT INTO Bank"
                                 "(id, name)"
@@ -308,10 +360,23 @@ void Database_Project::prepare_statements()
                                 nullptr);
     if(r != SQLITE_OK)
     {
-        // TODO sqlite3_errstr ??
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
     }
 
+    // Account
+    r = sqlite3_prepare_v2(m_db,
+                           "INSERT INTO Account"
+                           "(number, name, bank_id)"
+                           "VALUES(?1, ?2, ?3);",
+                           -1,
+                           &m_stmt_insert_account,
+                           nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
+    }
+
+    // Transaction
     r = sqlite3_prepare_v2(m_db,
                            "INSERT INTO [Transaction] "
                            "(fitid, date, description, amount) "
@@ -322,7 +387,6 @@ void Database_Project::prepare_statements()
 
     if(r != SQLITE_OK)
     {
-        // TODO sqlite3_errstr ??
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
     }
 }
