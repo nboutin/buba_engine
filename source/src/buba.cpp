@@ -64,6 +64,22 @@ std::vector<Transaction_t> Budget_Battle::get_transactions() const
     return m_dbp->get_transactions();
 }
 
+std::vector<Label_t> Budget_Battle::get_labels() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_labels();
+}
+
+std::vector<Category_t> Budget_Battle::get_categories() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_categories();
+}
+
 bool Budget_Battle::set_bank_name(std::uint32_t bank_id, const std::string& name)
 {
     if(!m_dbp)
@@ -80,20 +96,12 @@ bool Budget_Battle::set_account_name(const std::string& number, const std::strin
     return m_dbp->set_account_name(number, name);
 }
 
-std::vector<Label_t> Budget_Battle::get_labels() const
+bool Budget_Battle::set_transaction_label(const std::string fitid, const std::string& label_name)
 {
     if(!m_dbp)
-        return {};
+        return false;
 
-    return m_dbp->get_labels();
-}
-
-std::vector<Category_t> Budget_Battle::get_categories() const
-{
-    if(!m_dbp)
-        return {};
-
-    return m_dbp->get_categories();
+    return m_dbp->set_transaction_label(fitid, label_name);
 }
 
 bool Budget_Battle::add_label(const std::string& name)

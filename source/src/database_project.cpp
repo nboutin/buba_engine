@@ -413,6 +413,20 @@ bool Database_Project::set_account_name(const std::string& number, const std::st
     return true;
 }
 
+bool Database_Project::set_transaction_label(const std::string fitid, const std::string& label_name)
+{
+    auto request =
+        "UPDATE [Transaction] SET label_name='" + label_name + "' WHERE fitid='" + fitid + "';";
+
+    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+    return true;
+}
+
 bool Database_Project::add_label(const std::string& name)
 {
     auto request = "INSERT INTO	Label (name) VALUES ('" + name + "');";

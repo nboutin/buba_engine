@@ -46,7 +46,7 @@ struct Label_t
 
 struct Category_t
 {
-	std::string name;
+    std::string name;
 };
 
 class Budget_Battle
@@ -68,6 +68,7 @@ public:
 
     bool set_bank_name(std::uint32_t bank_id, const std::string& name);
     bool set_account_name(const std::string& number, const std::string& name);
+    bool set_transaction_label(const std::string fitid, const std::string& label_name);
 
     bool add_label(const std::string& name);
 
