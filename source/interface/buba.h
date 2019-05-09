@@ -34,6 +34,8 @@ struct Transaction_t
     std::string date;
     std::string description;
     double amount;
+    std::string account_number;
+    std::string label;
 };
 
 class Budget_Battle

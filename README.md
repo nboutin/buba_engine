@@ -8,9 +8,9 @@
 
 ### 0.1.0 [In Progress]
 - [x] Create/Open Buba project
-- [ ] Import OFX (Transactions, Account, Bank)
-- [ ] Set bank name interface
-- [ ] Set account name interface
+- [x] Import OFX (Transactions, Account, Bank)
+- [x] Set bank name interface
+- [x] Set account name interface
 - [ ] List all transactions
 - [ ] Assign category to operation
 - [ ] Display monthly static of category percent
@@ -20,6 +20,7 @@
 - [ ] Update all header file doxygen header
 - [ ] Add unit test
 - [ ] Add logging mechanism
+- [ ] Add control on column name when SELECT
 - [x] Rename table operation to transaction
 
 ## How To

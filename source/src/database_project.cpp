@@ -292,8 +292,14 @@ int get_transactions_cb(void* context, int n_column, char** columns_data, char**
         // TODO Add check on columns_name
         vector<Transaction_t>* transactions = reinterpret_cast<vector<Transaction_t>*>(context);
 
-        transactions->push_back(
-            {columns_data[0], columns_data[1], columns_data[2], strtod(columns_data[3], nullptr)});
+        std::string fitid          = columns_data[0];
+        std::string date           = columns_data[1];
+        std::string description    = columns_data[2];
+        double amount              = strtod(columns_data[3], nullptr);
+        std::string account_number = columns_data[4];
+        std::string label          = (columns_data[5] == nullptr) ? "" : columns_data[5];
+
+        transactions->push_back({fitid, date, description, amount, account_number, label});
         return 0;
     }
     return 1;
@@ -349,10 +355,10 @@ void Database_Project::create_table_transaction()
                           "description TEXT NOT NULL, "
                           "amount REAL NOT NULL, "
                           "account_number TEXT NOT NULL, "
-                          "category_name TEXT, "
+                          "label_name TEXT, "
                           "PRIMARY KEY(fitid), "
                           "FOREIGN KEY (account_number) REFERENCES Account(number), "
-                          "FOREIGN KEY (category_name) REFERENCES Category(name)"
+                          "FOREIGN KEY (label_name) REFERENCES Label(name)"
                           ");",
                           nullptr,
                           nullptr,
@@ -370,6 +376,7 @@ void Database_Project::create_table_category()
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Category("
                           "name TEXT NOT NULL, "
+                          "description TEXT, "
                           "PRIMARY KEY (name)"
                           ");",
                           nullptr,
@@ -388,9 +395,9 @@ void Database_Project::create_table_label()
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Label("
                           "name TEXT NOT NULL, "
-                          "category_id INTEGER NOT NULL, "
+                          "category_name TEXT NOT NULL, "
                           "PRIMARY KEY(name), "
-                          "FOREIGN KEY (category_id) REFERENCES Category(name)"
+                          "FOREIGN KEY (category_name) REFERENCES Category(name)"
                           ");",
                           nullptr,
                           nullptr,

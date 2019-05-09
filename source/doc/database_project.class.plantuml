@@ -14,16 +14,11 @@ class Account {
 class Transaction {
 	'Financial Institut Transaction ID
 	FITID: TEXT [PK][NOT NULL]
-	date: TEXT
-	description: TEXT
-	amount: REAL
+	date: TEXT [NOT NULL]
+	description: TEXT [NOT NULL]
+	amount: REAL [NOT NULL]
 	account_number: TEXT [FK][NOT NULL]
-	category_name: TEXT [FK]
-}
-
-class Label {
-	name: TEXT [PK]
-	category_name: TEXT [FK]
+	label_name: TEXT [FK]
 }
 
 class Category {
@@ -31,10 +26,15 @@ class Category {
 	description: TEXT
 }
 
+class Label {
+	name: TEXT [PK]
+	category_name: TEXT [FK]
+}
+
 
 Bank "1" -- "0..*" Account
 Account "1" -- "0..*" Transaction
-Transaction "0..*" -- "1" Category
+Transaction "0..*" -- "1" Label
 Label "0..*" -- "1" Category
 
 @enduml
