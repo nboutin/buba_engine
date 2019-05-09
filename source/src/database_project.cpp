@@ -354,6 +354,39 @@ std::vector<Label_t> Database_Project::get_labels()
     return labels;
 }
 
+int get_categories_cb(void* context, int n_column, char** columns_data, char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        // TODO Add check on columns_name
+        vector<Category_t>* categories = reinterpret_cast<vector<Category_t>*>(context);
+
+        std::string name = columns_data[0];
+
+        categories->push_back({name});
+        return 0;
+    }
+    return 1;
+}
+
+std::vector<Category_t> Database_Project::get_categories()
+{
+    vector<Category_t> categories;
+
+    auto r =
+        sqlite3_exec(m_db, "SELECT * FROM Category;", &get_categories_cb, &categories, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+
+    return categories;
+}
+
 bool Database_Project::set_bank_name(std::uint32_t id, const std::string& name)
 {
     auto request = "UPDATE Bank SET name='" + name + "' WHERE id=" + std::to_string(id) + ";";

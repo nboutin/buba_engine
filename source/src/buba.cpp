@@ -88,6 +88,14 @@ std::vector<Label_t> Budget_Battle::get_labels() const
     return m_dbp->get_labels();
 }
 
+std::vector<Category_t> Budget_Battle::get_categories() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_categories();
+}
+
 bool Budget_Battle::add_label(const std::string& name)
 {
     if(!m_dbp)
