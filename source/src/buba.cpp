@@ -71,3 +71,11 @@ bool Budget_Battle::set_bank_name(std::uint32_t bank_id, const std::string& name
 
     return m_dbp->set_bank_name(bank_id, name);
 }
+
+bool Budget_Battle::set_account_name(const std::string& number, const std::string& name)
+{
+    if(!m_dbp)
+        return false;
+
+    return m_dbp->set_account_name(number, name);
+}
