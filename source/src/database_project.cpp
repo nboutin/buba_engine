@@ -263,9 +263,9 @@ void Database_Project::create_table_transaction()
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE [Transaction]("
                           "fitid TEXT NOT NULL, "
-                          "date TEXT, "
-                          "description TEXT, "
-                          "amount REAL, "
+                          "date TEXT NOT NULL, "
+                          "description TEXT NOT NULL, "
+                          "amount REAL NOT NULL, "
                           "account_number TEXT NOT NULL, "
                           "category_name TEXT, "
                           "PRIMARY KEY(fitid), "
@@ -345,7 +345,7 @@ void Database_Project::create_table_account()
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Account ("
                           "number TEXT NOT NULL, "
-                          "name TEXT, "
+                          "name TEXT , "
                           "bank_id INTEGER NOT NULL, "
                           "PRIMARY KEY(number), "
                           "FOREIGN KEY(bank_id) REFERENCES Bank(id)"
