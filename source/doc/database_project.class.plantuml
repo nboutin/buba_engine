@@ -8,7 +8,7 @@ class Bank {
 class Account {
 	number: TEXT [PK][NOT NULL]
 	name: TEXT
-	bank_id: INTEGER [FK]
+	bank_id: INTEGER [FK][NOT NULL]
 }
 
 class Transaction {

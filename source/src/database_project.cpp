@@ -333,7 +333,7 @@ void Database_Project::create_table_account()
                           "CREATE TABLE Account ("
                           "number TEXT NOT NULL, "
                           "name TEXT, "
-                          "bank_id INTEGER, "
+                          "bank_id INTEGER NOT NULL, "
                           "PRIMARY KEY(number), "
                           "FOREIGN KEY(bank_id) REFERENCES Bank(id)"
                           ");",
