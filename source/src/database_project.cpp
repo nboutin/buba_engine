@@ -284,6 +284,20 @@ std::vector<buba::Transaction_t> Database_Project::get_transactions()
     return transactions;
 }
 
+bool Database_Project::set_bank_name(std::uint32_t id, const std::string& name)
+{
+    auto request = "UPDATE Bank SET name='" + name + "' WHERE id=" + std::to_string(id) + ";";
+    //    request = "UPDATE Bank SET name='credit_mutuel' WHERE id=22222;";
+
+    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+    return true;
+}
+
 void Database_Project::create_table_transaction()
 {
     auto r = sqlite3_exec(m_db,

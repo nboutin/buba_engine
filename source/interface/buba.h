@@ -43,6 +43,8 @@ public:
     std::vector<Bank_t> get_banks() const;
     std::vector<Transaction_t> get_transactions() const;
 
+    bool set_bank_name(std::uint32_t bank_id, const std::string& name);
+
 private:
     std::unique_ptr<Database_Project> m_dbp;
 };

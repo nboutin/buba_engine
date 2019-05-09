@@ -36,9 +36,9 @@ public:
                             const std::string& account_number);
 
     std::vector<Bank_t> get_banks();
+    std::vector<Transaction_t> get_transactions(); // TODO return a map ?
 
-    // TODO return a map ?
-    std::vector<Transaction_t> get_transactions();
+    bool set_bank_name(std::uint32_t id, const std::string& name);
 
 private:
     void create_table_transaction();
