@@ -17,8 +17,15 @@ class Database_Project;
 
 struct Bank_t
 {
-    std::uint32_t id;
+    int id;
     std::string name;
+};
+
+struct Account_t
+{
+    std::string number;
+    std::string name;
+    int bank_id;
 };
 
 struct Transaction_t
@@ -41,6 +48,7 @@ public:
     bool import_ofx(const std::string& pathname);
 
     std::vector<Bank_t> get_banks() const;
+    std::vector<Account_t> get_accounts() const;
     std::vector<Transaction_t> get_transactions() const;
 
     bool set_bank_name(std::uint32_t bank_id, const std::string& name);
