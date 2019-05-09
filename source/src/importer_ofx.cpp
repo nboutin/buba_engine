@@ -50,10 +50,10 @@ int transaction_cb(const struct OfxTransactionData data, void* context)
     //         "|"
     //         << data.memo << "|" << data.amount << endl;
 
-    dbp->insert_transaction(std::string(data.fi_id),
-                            std::asctime(std::localtime(&data.date_posted)),
-                            std::string(data.name),
-                            data.amount);
+    char date[64];
+    strftime(date, 64, "%Y%m%d", std::localtime(&data.date_posted));
+
+    dbp->insert_transaction(std::string(data.fi_id), date, std::string(data.name), data.amount);
 
     return 0;
 }
