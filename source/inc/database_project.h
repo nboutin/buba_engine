@@ -32,7 +32,8 @@ public:
     bool insert_transaction(const std::string& fitid,
                             const std::string& date,
                             const std::string& description,
-                            double amount);
+                            double amount,
+                            const std::string& account_number);
 
     // TODO return a map ?
     std::vector<Transaction_t> get_transactions_all();

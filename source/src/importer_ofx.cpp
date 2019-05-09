@@ -39,7 +39,7 @@ int account_cb(const struct OfxAccountData data, void* context)
     dbp->insert_bank(bank_id, "");
 
     // 33 333 333 333
-//    int account_number = std::stoi(data.account_number);
+    //    int account_number = std::stoi(data.account_number);
     dbp->insert_account(data.account_number, "", bank_id);
 
     return 0;
@@ -58,7 +58,11 @@ int transaction_cb(const struct OfxTransactionData data, void* context)
     char date[64];
     strftime(date, 64, "%Y%m%d", std::localtime(&data.date_posted));
 
-    dbp->insert_transaction(std::string(data.fi_id), date, std::string(data.name), data.amount);
+    dbp->insert_transaction(std::string(data.fi_id),
+                            date,
+                            std::string(data.name),
+                            data.amount,
+                            data.account_ptr->account_number);
 
     return 0;
 }

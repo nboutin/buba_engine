@@ -144,7 +144,8 @@ bool Database_Project::insert_account(const std::string& number,
 bool Database_Project::insert_transaction(const std::string& fitid,
                                           const std::string& date,
                                           const std::string& description,
-                                          double amount)
+                                          double amount,
+                                          const std::string& account_number)
 {
     auto r = sqlite3_reset(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
@@ -191,6 +192,18 @@ bool Database_Project::insert_transaction(const std::string& fitid,
 
     // Amount
     r = sqlite3_bind_double(m_stmt_insert_transaction, 4, amount);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+
+    // Account number
+    r = sqlite3_bind_text(m_stmt_insert_transaction,
+                          5,
+                          account_number.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
@@ -253,7 +266,7 @@ void Database_Project::create_table_transaction()
                           "date TEXT, "
                           "description TEXT, "
                           "amount REAL, "
-                          "account_number INTEGER, "
+                          "account_number TEXT NOT NULL, "
                           "category_name TEXT, "
                           "PRIMARY KEY(fitid), "
                           "FOREIGN KEY (account_number) REFERENCES Account(number), "
@@ -379,8 +392,8 @@ void Database_Project::prepare_statements()
     // Transaction
     r = sqlite3_prepare_v2(m_db,
                            "INSERT INTO [Transaction] "
-                           "(fitid, date, description, amount) "
-                           "VALUES (?1, ?2, ?3, ?4);",
+                           "(fitid, date, description, amount, account_number) "
+                           "VALUES (?1, ?2, ?3, ?4, ?5);",
                            -1,
                            &m_stmt_insert_transaction,
                            nullptr);

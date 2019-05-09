@@ -17,7 +17,7 @@ class Transaction {
 	date: TEXT
 	description: TEXT
 	amount: REAL
-	account_number: INTEGER [FK]
+	account_number: TEXT [FK][NOT NULL]
 	category_name: TEXT [FK]
 }
 
