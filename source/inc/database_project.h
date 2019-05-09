@@ -35,6 +35,8 @@ public:
                             double amount,
                             const std::string& account_number);
 
+    std::vector<Bank_t> get_banks();
+
     // TODO return a map ?
     std::vector<Transaction_t> get_transactions_all();
 

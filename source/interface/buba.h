@@ -15,9 +15,15 @@ namespace buba
 {
 class Database_Project;
 
+struct Bank_t
+{
+    std::uint32_t id;
+    std::string name;
+};
+
 struct Transaction_t
 {
-	std::string fitid;
+    std::string fitid;
     std::string date;
     std::string description;
     double amount;
@@ -34,6 +40,7 @@ public:
 
     bool import_ofx(const std::string& pathname);
 
+    std::vector<Bank_t> get_banks() const;
     std::vector<Transaction_t> get_transactions_all() const;
 
 private:
