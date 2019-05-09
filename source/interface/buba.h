@@ -56,6 +56,8 @@ public:
     bool set_bank_name(std::uint32_t bank_id, const std::string& name);
     bool set_account_name(const std::string& number, const std::string& name);
 
+    bool add_label(const std::string& name);
+
 private:
     std::unique_ptr<Database_Project> m_dbp;
 };

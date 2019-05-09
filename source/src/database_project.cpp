@@ -346,6 +346,19 @@ bool Database_Project::set_account_name(const std::string& number, const std::st
     return true;
 }
 
+bool Database_Project::add_label(const std::string& name)
+{
+    auto request = "INSERT INTO	Label (name) VALUES ('" + name + "');";
+
+    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+    return true;
+}
+
 void Database_Project::create_table_transaction()
 {
     auto r = sqlite3_exec(m_db,
@@ -395,7 +408,7 @@ void Database_Project::create_table_label()
     auto r = sqlite3_exec(m_db,
                           "CREATE TABLE Label("
                           "name TEXT NOT NULL, "
-                          "category_name TEXT NOT NULL, "
+                          "category_name TEXT, "
                           "PRIMARY KEY(name), "
                           "FOREIGN KEY (category_name) REFERENCES Category(name)"
                           ");",
