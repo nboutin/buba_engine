@@ -7,8 +7,10 @@
 - [ ] Automatic category assignement for transaction
 
 ### 0.1.0 [In Progress]
-- [ ] Create/Open Buba project
+- [x] Create/Open Buba project
 - [ ] Import OFX (Transactions, Account, Bank)
+- [ ] Set bank name interface
+- [ ] Set account name interface
 - [ ] List all transactions
 - [ ] Assign category to operation
 - [ ] Display monthly static of category percent
@@ -16,4 +18,27 @@
 #### Dev
 - [ ] Add License file
 - [ ] Update all header file doxygen header
+- [ ] Add unit test
+- [ ] Add logging mechanism
 - [x] Rename table operation to transaction
+
+## How To
+### Configure
+```sh
+cmake -H. -Bbuild
+```
+
+### Build
+```sh
+cmake --build build -- -j 4
+```
+
+### Install
+```sh
+sudo cmake --build build --target install
+```
+
+### Test
+```sh
+cmake --build build --target test
+```

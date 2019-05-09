@@ -7,7 +7,7 @@
 
 #include "buba.h"
 #include "database_project.h"
-#include "parser_ofx.h"
+#include "importer_ofx.h"
 
 #include <cstdlib>
 #include <iostream>
@@ -33,38 +33,9 @@ bool Budget_Battle::open_project(const std::string& pathname)
 
 bool Budget_Battle::import_ofx(const std::string& pathname)
 {
-    Parser_OFX parser(pathname);
+    Importer_OFX importer;
 
-    auto tree = parser.get_tree();
-
-    auto operations_tree = tree.get_child("OFX.BANKMSGSRSV1.STMTTRNRS.STMTRS.BANKTRANLIST.STMTTRN");
-
-    string fitid, date, description;
-    double amount = 0;
-
-    for(auto i : operations_tree)
-    {
-        //        cout << "i:" << i.first << ":" << i.second.data() << endl;
-
-        if(i.first == "FITID")
-        {
-            fitid = i.second.data();
-        }
-        else if(i.first == "DTPOSTED")
-        {
-            date = i.second.data();
-        }
-        else if(i.first == "TRNAMT")
-        {
-            amount = strtod(i.second.data().c_str(), nullptr);
-        }
-        // Hopefully NAME is last in STMTTRN structure
-        else if(i.first == "NAME")
-        {
-            description = i.second.data();
-            m_dbp->insert_transaction(fitid, date, description, amount);
-        }
-    }
+    importer.process(pathname, m_dbp);
 
     return true;
 }

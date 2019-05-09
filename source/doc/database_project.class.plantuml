@@ -1,13 +1,14 @@
 @startuml
 
 class Bank {
-	name: TEXT [PK][NOT NULL]
+	id: INTEGER [PK][NOT NULL]
+	name: TEXT
 }
 
 class Account {
-	number: INTEGER [PK][NOT NULL]
+	number: TEXT [PK][NOT NULL]
 	name: TEXT
-	bank_name: TEXT [FK]
+	bank_id: INTEGER [FK][NOT NULL]
 }
 
 class Transaction {
@@ -16,7 +17,7 @@ class Transaction {
 	date: TEXT
 	description: TEXT
 	amount: REAL
-	account_number: INTEGER [FK]
+	account_number: TEXT [FK][NOT NULL]
 	category_name: TEXT [FK]
 }
 
