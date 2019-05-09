@@ -38,6 +38,12 @@ struct Transaction_t
     std::string label;
 };
 
+struct Label_t
+{
+    std::string name;
+    std::string category_name;
+};
+
 class Budget_Battle
 {
 public:
@@ -52,6 +58,7 @@ public:
     std::vector<Bank_t> get_banks() const;
     std::vector<Account_t> get_accounts() const;
     std::vector<Transaction_t> get_transactions() const;
+    std::vector<Label_t> get_labels() const;
 
     bool set_bank_name(std::uint32_t bank_id, const std::string& name);
     bool set_account_name(const std::string& number, const std::string& name);
