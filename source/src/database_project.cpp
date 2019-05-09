@@ -231,7 +231,7 @@ int get_banks_cb(void* context, int n_column, char** columns_data, char** column
         // TODO Add check on columns_name
         vector<Bank_t>* banks = reinterpret_cast<vector<Bank_t>*>(context);
 
-        std::uint32_t id = std::stoi(columns_data[0]);
+        int id = std::stoi(columns_data[0]);
         banks->push_back({id, columns_data[1]});
         return 0;
     }
@@ -250,6 +250,36 @@ std::vector<Bank_t> Database_Project::get_banks()
         return {};
     }
     return banks;
+}
+
+int get_accounts_cb(void* context, int n_column, char** columns_data, char** columns_name)
+{
+    (void) n_column;
+    (void) columns_name;
+
+    if(context != nullptr)
+    {
+        // TODO Add check on columns_name
+        vector<Account_t>* accounts = reinterpret_cast<vector<Account_t>*>(context);
+
+        int bank_id = std::stoi(columns_data[2]);
+        accounts->push_back({columns_data[0], columns_data[1], bank_id});
+        return 0;
+    }
+    return 1;
+}
+
+std::vector<Account_t> Database_Project::get_accounts()
+{
+    vector<Account_t> accounts;
+
+    auto r = sqlite3_exec(m_db, "SELECT * FROM Account;", &get_accounts_cb, &accounts, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+    return accounts;
 }
 
 int get_transactions_cb(void* context, int n_column, char** columns_data, char** columns_name)

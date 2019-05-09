@@ -48,6 +48,14 @@ std::vector<Bank_t> Budget_Battle::get_banks() const
     return m_dbp->get_banks();
 }
 
+std::vector<Account_t> Budget_Battle::get_accounts() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_accounts();
+}
+
 std::vector<Transaction_t> Budget_Battle::get_transactions() const
 {
     if(!m_dbp)
@@ -58,7 +66,8 @@ std::vector<Transaction_t> Budget_Battle::get_transactions() const
 
 bool Budget_Battle::set_bank_name(std::uint32_t bank_id, const std::string& name)
 {
-	if(!m_dbp) return false;
+    if(!m_dbp)
+        return false;
 
-	return m_dbp->set_bank_name(bank_id, name);
+    return m_dbp->set_bank_name(bank_id, name);
 }
