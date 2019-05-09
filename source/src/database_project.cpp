@@ -252,28 +252,7 @@ std::vector<Bank_t> Database_Project::get_banks()
     return banks;
 }
 
-std::vector<buba::Transaction_t> Database_Project::get_transactions_all()
-{
-    vector<Transaction_t> transaction;
-
-    auto r = sqlite3_exec(m_db,
-                          "SELECT * FROM [Transaction];",
-                          &Database_Project::get_transactions_all_cb,
-                          &transaction,
-                          nullptr);
-    if(r != SQLITE_OK)
-    {
-        cerr << sqlite3_errstr(r) << endl;
-        return {};
-    }
-
-    return transaction;
-}
-
-int Database_Project::get_transactions_all_cb(void* context,
-                                              int n_column,
-                                              char** columns_data,
-                                              char** columns_name)
+int get_transactions_cb(void* context, int n_column, char** columns_data, char** columns_name)
 {
     (void) n_column;
     (void) columns_name;
@@ -281,12 +260,28 @@ int Database_Project::get_transactions_all_cb(void* context,
     if(context != nullptr)
     {
         // TODO Add check on columns_name
-        vector<Transaction_t>* operations = reinterpret_cast<vector<Transaction_t>*>(context);
-        operations->push_back(
+        vector<Transaction_t>* transactions = reinterpret_cast<vector<Transaction_t>*>(context);
+
+        transactions->push_back(
             {columns_data[0], columns_data[1], columns_data[2], strtod(columns_data[3], nullptr)});
         return 0;
     }
     return 1;
+}
+
+std::vector<buba::Transaction_t> Database_Project::get_transactions()
+{
+    vector<Transaction_t> transactions;
+
+    auto r = sqlite3_exec(
+        m_db, "SELECT * FROM [Transaction];", &get_transactions_cb, &transactions, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+
+    return transactions;
 }
 
 void Database_Project::create_table_transaction()

@@ -38,7 +38,7 @@ public:
     std::vector<Bank_t> get_banks();
 
     // TODO return a map ?
-    std::vector<Transaction_t> get_transactions_all();
+    std::vector<Transaction_t> get_transactions();
 
 private:
     void create_table_transaction();
@@ -48,8 +48,6 @@ private:
     void create_table_account();
 
     void prepare_statements();
-
-    static int get_transactions_all_cb(void*, int, char**, char**);
 
     sqlite3* m_db                           = nullptr;
     sqlite3_stmt* m_stmt_insert_bank        = nullptr;

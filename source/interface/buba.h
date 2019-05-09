@@ -41,7 +41,7 @@ public:
     bool import_ofx(const std::string& pathname);
 
     std::vector<Bank_t> get_banks() const;
-    std::vector<Transaction_t> get_transactions_all() const;
+    std::vector<Transaction_t> get_transactions() const;
 
 private:
     std::unique_ptr<Database_Project> m_dbp;
