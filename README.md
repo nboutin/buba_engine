@@ -11,8 +11,9 @@
 - [x] Import OFX (Transactions, Account, Bank)
 - [x] Set bank name interface
 - [x] Set account name interface
-- [ ] List all transactions
-- [ ] Assign category to operation
+- [x] List all transactions
+- [ ] Assign label to operation
+- [ ] Assign category to label
 - [ ] Display monthly static of category percent
 
 #### Dev
