@@ -79,3 +79,11 @@ bool Budget_Battle::set_account_name(const std::string& number, const std::strin
 
     return m_dbp->set_account_name(number, name);
 }
+
+bool Budget_Battle::add_label(const std::string& name)
+{
+    if(!m_dbp)
+        return false;
+
+    return m_dbp->add_label(name);
+}
