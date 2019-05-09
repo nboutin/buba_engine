@@ -2,6 +2,8 @@
 #include "importer_ofx.h"
 #include "database_project.h"
 
+#include <ctime>
+#include <iomanip>
 #include <iostream>
 using namespace std;
 
@@ -40,7 +42,18 @@ int account_cb(const struct OfxAccountData data, void* context)
 
 int transaction_cb(const struct OfxTransactionData data, void* context)
 {
-    (void) data;
-    (void) context;
+    Database_Project* dbp = reinterpret_cast<Database_Project*>(context);
+
+    //    cout << "|" << data.account_ptr->bank_id << "|" << data.account_ptr->branch_id << "|"
+    //         << data.account_ptr->account_number << "|" << data.fi_id << "|"
+    //         << std::put_time(std::localtime(&data.date_posted), "%c %Z") << "|" << data.name <<
+    //         "|"
+    //         << data.memo << "|" << data.amount << endl;
+
+    dbp->insert_transaction(std::string(data.fi_id),
+                            std::asctime(std::localtime(&data.date_posted)),
+                            std::string(data.name),
+                            data.amount);
+
     return 0;
 }
