@@ -55,3 +55,10 @@ std::vector<Transaction_t> Budget_Battle::get_transactions() const
 
     return m_dbp->get_transactions();
 }
+
+bool Budget_Battle::set_bank_name(std::uint32_t bank_id, const std::string& name)
+{
+	if(!m_dbp) return false;
+
+	return m_dbp->set_bank_name(bank_id, name);
+}
