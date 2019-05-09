@@ -30,6 +30,7 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
     {
         create_table_transaction();
         create_table_category();
+        populate_table_category();
         create_table_label();
         create_table_bank();
         create_table_account();
@@ -392,6 +393,46 @@ bool Database_Project::add_label(const std::string& name)
     return true;
 }
 
+void Database_Project::create_table_bank()
+{
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Bank ("
+                          "id INTEGER NOT NULL, "
+                          "name TEXT, "
+                          "PRIMARY KEY(id)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        sqlite3_close(m_db);
+    }
+}
+
+void Database_Project::create_table_account()
+{
+    auto r = sqlite3_exec(m_db,
+                          "CREATE TABLE Account ("
+                          "number TEXT NOT NULL, "
+                          "name TEXT , "
+                          "bank_id INTEGER NOT NULL, "
+                          "PRIMARY KEY(number), "
+                          "FOREIGN KEY(bank_id) REFERENCES Bank(id)"
+                          ");",
+                          nullptr,
+                          nullptr,
+                          nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        sqlite3_close(m_db);
+    }
+}
+
 void Database_Project::create_table_transaction()
 {
     auto r = sqlite3_exec(m_db,
@@ -436,6 +477,22 @@ void Database_Project::create_table_category()
     }
 }
 
+void Database_Project::populate_table_category()
+{
+    constexpr auto request = "INSERT INTO Category (name) VALUES('Essential');"
+                             "INSERT INTO Category (name) VALUES('Security');"
+                             "INSERT INTO Category (name) VALUES('Goals');"
+                             "INSERT INTO Category (name) VALUES('Lifestyle');"
+                             "INSERT INTO Category (name) VALUES('Optional');";
+
+    auto r = sqlite3_exec(m_db, request, nullptr, nullptr, nullptr);
+
+    if(r != SQLITE_OK)
+    {
+        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+    }
+}
+
 void Database_Project::create_table_label()
 {
     auto r = sqlite3_exec(m_db,
@@ -452,46 +509,6 @@ void Database_Project::create_table_label()
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errmsg(m_db) << endl;
-        sqlite3_close(m_db);
-    }
-}
-
-void Database_Project::create_table_bank()
-{
-    auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE Bank ("
-                          "id INTEGER NOT NULL, "
-                          "name TEXT, "
-                          "PRIMARY KEY(id)"
-                          ");",
-                          nullptr,
-                          nullptr,
-                          nullptr);
-
-    if(r != SQLITE_OK)
-    {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
-        sqlite3_close(m_db);
-    }
-}
-
-void Database_Project::create_table_account()
-{
-    auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE Account ("
-                          "number TEXT NOT NULL, "
-                          "name TEXT , "
-                          "bank_id INTEGER NOT NULL, "
-                          "PRIMARY KEY(number), "
-                          "FOREIGN KEY(bank_id) REFERENCES Bank(id)"
-                          ");",
-                          nullptr,
-                          nullptr,
-                          nullptr);
-
-    if(r != SQLITE_OK)
-    {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
         sqlite3_close(m_db);
     }
 }

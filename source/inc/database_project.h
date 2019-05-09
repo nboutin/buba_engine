@@ -52,6 +52,7 @@ private:
     void create_table_bank();
     void create_table_account();
 
+    void populate_table_category();
     void prepare_statements();
 
     sqlite3* m_db                           = nullptr;

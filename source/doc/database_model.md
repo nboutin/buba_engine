@@ -9,7 +9,7 @@
 |Security	|Fond urgence, Remboursement crédit
 |Goals		|Vacances, Démarrer entreprise, Achat Immobilier
 |Lifestyle	|Vetements, Coiffeur, Sport, Animaux, Cadeaux
-|Optionnal	|Restaurant, Films, Jeux, Bien-etre spéciale
+|Optional	|Restaurant, Films, Jeux, Bien-etre spéciale
 |===
 
 
