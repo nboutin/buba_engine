@@ -12,7 +12,7 @@
 - [x] Set bank name interface
 - [x] Set account name interface
 - [x] List all transactions
-- [ ] Assign label to operation
+- [x] Assign label to transaction
 - [ ] Assign category to label
 - [ ] Display monthly static of category percent
 
