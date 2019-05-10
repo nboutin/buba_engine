@@ -50,7 +50,7 @@ target_link_libraries(${PROJECT_NAME} PUBLIC sqlite3)
 
 find_package(PkgConfig REQUIRED)
 
-pkg_check_modules(OFX REQUIRED libofx>=0.9.12)
+pkg_check_modules(OFX REQUIRED libofx>=0.9.10)
 
 target_include_directories(${PROJECT_NAME} PRIVATE ${OFX_INCLUDE_DIRS})
 target_compile_options(${PROJECT_NAME} PRIVATE ${OFX_CFLAGS_OTHER})
