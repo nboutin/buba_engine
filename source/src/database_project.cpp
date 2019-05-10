@@ -41,7 +41,19 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
 
 Database_Project::~Database_Project()
 {
-    auto r = sqlite3_finalize(m_stmt_insert_transaction);
+    auto r = sqlite3_finalize(m_stmt_insert_bank);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+    }
+
+    r = sqlite3_finalize(m_stmt_insert_account);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+    }
+
+    r = sqlite3_finalize(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
     {
         cerr << sqlite3_errstr(r) << endl;
