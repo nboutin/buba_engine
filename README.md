@@ -22,7 +22,7 @@
 - [ ] Add unit test
 - [ ] Add logging mechanism
 - [ ] Add control on column name when SELECT
-- [ ] Add project close interface
+- [x] Add project close interface
 - [x] Rename table operation to transaction
 
 ## How To
