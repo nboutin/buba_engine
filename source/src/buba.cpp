@@ -19,17 +19,19 @@ using namespace buba;
 Budget_Battle::Budget_Battle() {}
 Budget_Battle::~Budget_Battle() {}
 
-bool Budget_Battle::create_project(const std::string& pathname)
+bool Budget_Battle::project_create(const std::string& pathname)
 {
     m_dbp = std::make_unique<Database_Project>(pathname);
     return true;
 }
 
-bool Budget_Battle::open_project(const std::string& pathname)
+bool Budget_Battle::project_open(const std::string& pathname)
 {
     m_dbp = std::make_unique<Database_Project>(pathname, db_connection_e::OPEN);
     return true;
 }
+
+void Budget_Battle::project_close() { m_dbp.reset(nullptr); }
 
 bool Budget_Battle::import_ofx(const std::string& pathname)
 {

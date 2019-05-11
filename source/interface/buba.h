@@ -55,8 +55,9 @@ public:
     Budget_Battle();
     ~Budget_Battle();
 
-    bool create_project(const std::string& pathname);
-    bool open_project(const std::string& pathname);
+    bool project_create(const std::string& pathname);
+    bool project_open(const std::string& pathname);
+    void project_close();
 
     bool import_ofx(const std::string& pathname);
 
