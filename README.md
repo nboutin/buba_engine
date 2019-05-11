@@ -13,7 +13,7 @@
 - [x] Set account name interface
 - [x] List all transactions
 - [x] Assign label to transaction
-- [ ] Assign category to label
+- [x] Assign category to label
 - [ ] Display monthly static of category percent
 
 #### Dev
@@ -22,6 +22,7 @@
 - [ ] Add unit test
 - [ ] Add logging mechanism
 - [ ] Add control on column name when SELECT
+- [ ] Add project close interface
 - [x] Rename table operation to transaction
 
 ## How To
