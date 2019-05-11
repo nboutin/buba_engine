@@ -96,8 +96,11 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     r = sqlite3_step(m_stmt_insert_bank);
     if(r != SQLITE_DONE)
     {
-        cerr << sqlite3_errstr(r) << endl;
-        return false;
+        if(r != SQLITE_CONSTRAINT)
+        {
+            cerr << sqlite3_errstr(r) << endl;
+            return false;
+        }
     }
 
     return true;
@@ -147,8 +150,11 @@ bool Database_Project::insert_account(const std::string& number,
     r = sqlite3_step(m_stmt_insert_account);
     if(r != SQLITE_DONE)
     {
-        cerr << sqlite3_errstr(r) << endl;
-        return false;
+        if(r != SQLITE_CONSTRAINT)
+        {
+            cerr << sqlite3_errstr(r) << endl;
+            return false;
+        }
     }
 
     return true;
@@ -227,8 +233,11 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     r = sqlite3_step(m_stmt_insert_transaction);
     if(r != SQLITE_DONE)
     {
-        cerr << sqlite3_errstr(r) << endl;
-        return false;
+        if(r != SQLITE_CONSTRAINT)
+        {
+            cerr << sqlite3_errstr(r) << endl;
+            return false;
+        }
     }
 
     return true;
@@ -275,8 +284,9 @@ int get_accounts_cb(void* context, int n_column, char** columns_data, char** col
         // TODO Add check on columns_name
         vector<Account_t>* accounts = reinterpret_cast<vector<Account_t>*>(context);
 
-        int bank_id = std::stoi(columns_data[2]);
-        accounts->push_back({columns_data[0], columns_data[1], bank_id});
+        double balance = strtod(columns_data[2], nullptr);
+        int bank_id    = std::stoi(columns_data[3]);
+        accounts->push_back({columns_data[0], columns_data[1], balance, bank_id});
         return 0;
     }
     return 1;
@@ -425,6 +435,20 @@ bool Database_Project::set_account_name(const std::string& number, const std::st
     return true;
 }
 
+bool Database_Project::set_account_balance(const std::string& number, double balance)
+{
+    auto request = "UPDATE Account SET balance="s + std::to_string(balance) + " WHERE number='"
+                   + number + "';";
+
+    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+    return true;
+}
+
 bool Database_Project::set_transaction_label(const std::string fitid, const std::string& label_name)
 {
     auto request =
@@ -490,6 +514,7 @@ void Database_Project::create_table_account()
                           "CREATE TABLE Account ("
                           "number TEXT NOT NULL, "
                           "name TEXT , "
+                          "balance REAL, "
                           "bank_id INTEGER NOT NULL, "
                           "PRIMARY KEY(number), "
                           "FOREIGN KEY(bank_id) REFERENCES Bank(id)"

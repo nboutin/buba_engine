@@ -14,6 +14,8 @@
 - [x] List all transactions
 - [x] Assign label to transaction
 - [x] Assign category to label
+- [x] Import account balance from OFX
+- [ ] Check account balance imported against computed
 - [ ] Display monthly static of category percent
 
 #### Dev

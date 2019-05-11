@@ -25,6 +25,7 @@ struct Account_t
 {
     std::string number;
     std::string name;
+    double balance;
     int bank_id;
 };
 
