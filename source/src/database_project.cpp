@@ -439,6 +439,19 @@ bool Database_Project::set_transaction_label(const std::string fitid, const std:
     return true;
 }
 
+bool Database_Project::set_label_category(const std::string& label, const std::string& category)
+{
+    auto request = "UPDATE Label SET category_name='" + category + "' WHERE name='" + label + "';";
+
+    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return false;
+    }
+    return true;
+}
+
 bool Database_Project::add_label(const std::string& name)
 {
     auto request = "INSERT INTO	Label (name) VALUES ('" + name + "');";

@@ -104,6 +104,14 @@ bool Budget_Battle::set_transaction_label(const std::string fitid, const std::st
     return m_dbp->set_transaction_label(fitid, label_name);
 }
 
+bool Budget_Battle::set_label_category(const std::string& label, const std::string& category)
+{
+    if(!m_dbp)
+        return false;
+
+    return m_dbp->set_label_category(label, category);
+}
+
 bool Budget_Battle::add_label(const std::string& name)
 {
     if(!m_dbp)
