@@ -8,7 +8,7 @@ add_library(${PROJECT_NAME} SHARED
 
 target_include_directories(${PROJECT_NAME} 
 	PUBLIC interface
-	PRIVATE inc)
+	PRIVATE inc external)
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic -Wold-style-cast -Wshadow)
 
