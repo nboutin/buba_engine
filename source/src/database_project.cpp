@@ -7,21 +7,23 @@
 
 #include "database_project.h"
 
-#include <sqlite3.h>
-
-#include <iostream>
+#include "spdlog/sinks/basic_file_sink.h"
+#include "spdlog/spdlog.h"
+#include "sqlite3.h"
 
 using namespace buba;
 using namespace std;
 
 Database_Project::Database_Project(const std::string& pathname, db_connection_e connection)
 {
+    spdlog::info("{} {} {}", __func__, pathname, connection);
+
     auto r = sqlite3_open_v2(
         pathname.c_str(), &m_db, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, nullptr);
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errmsg(m_db));
         sqlite3_close(m_db);
         return;
     }
@@ -44,25 +46,25 @@ Database_Project::~Database_Project()
     auto r = sqlite3_finalize(m_stmt_insert_bank);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 
     r = sqlite3_finalize(m_stmt_insert_account);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 
     r = sqlite3_finalize(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 
     r = sqlite3_close(m_db);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 }
 
@@ -71,7 +73,7 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     auto r = sqlite3_reset(m_stmt_insert_bank);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -79,7 +81,7 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     r = sqlite3_bind_int(m_stmt_insert_bank, 1, id);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -88,7 +90,7 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
         m_stmt_insert_bank, 2, name.c_str(), -1, reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -96,11 +98,13 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     r = sqlite3_step(m_stmt_insert_bank);
     if(r != SQLITE_DONE)
     {
-        if(r != SQLITE_CONSTRAINT)
-        {
-            cerr << sqlite3_errstr(r) << endl;
-            return false;
-        }
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+        //    	if(r != SQLITE_CONSTRAINT)
+        //        {
+        //            cerr << sqlite3_errstr(r) << endl;
+        //            return false;
+        //        }
     }
 
     return true;
@@ -113,7 +117,7 @@ bool Database_Project::insert_account(const std::string& number,
     auto r = sqlite3_reset(m_stmt_insert_account);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -125,7 +129,7 @@ bool Database_Project::insert_account(const std::string& number,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -134,7 +138,7 @@ bool Database_Project::insert_account(const std::string& number,
         m_stmt_insert_account, 2, name.c_str(), -1, reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -142,7 +146,7 @@ bool Database_Project::insert_account(const std::string& number,
     r = sqlite3_bind_int(m_stmt_insert_account, 3, bank_id);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -150,11 +154,13 @@ bool Database_Project::insert_account(const std::string& number,
     r = sqlite3_step(m_stmt_insert_account);
     if(r != SQLITE_DONE)
     {
-        if(r != SQLITE_CONSTRAINT)
-        {
-            cerr << sqlite3_errstr(r) << endl;
-            return false;
-        }
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+        //        if(r != SQLITE_CONSTRAINT)
+        //        {
+        //            cerr << sqlite3_errstr(r) << endl;
+        //            return false;
+        //        }
     }
 
     return true;
@@ -169,7 +175,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     auto r = sqlite3_reset(m_stmt_insert_transaction);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -181,7 +187,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -193,7 +199,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -205,7 +211,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -213,7 +219,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     r = sqlite3_bind_double(m_stmt_insert_transaction, 4, amount);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -225,7 +231,7 @@ bool Database_Project::insert_transaction(const std::string& fitid,
                           reinterpret_cast<sqlite3_destructor_type>(-1));
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
 
@@ -233,11 +239,13 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     r = sqlite3_step(m_stmt_insert_transaction);
     if(r != SQLITE_DONE)
     {
-        if(r != SQLITE_CONSTRAINT)
-        {
-            cerr << sqlite3_errstr(r) << endl;
-            return false;
-        }
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+        //        if(r != SQLITE_CONSTRAINT)
+        //        {
+        //            cerr << sqlite3_errstr(r) << endl;
+        //            return false;
+        //        }
     }
 
     return true;
@@ -268,7 +276,7 @@ std::vector<Bank_t> Database_Project::get_banks()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
     return banks;
@@ -299,7 +307,7 @@ std::vector<Account_t> Database_Project::get_accounts()
     auto r = sqlite3_exec(m_db, "SELECT * FROM Account;", &get_accounts_cb, &accounts, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
     return accounts;
@@ -336,7 +344,7 @@ std::vector<buba::Transaction_t> Database_Project::get_transactions()
         m_db, "SELECT * FROM [Transaction];", &get_transactions_cb, &transactions, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
 
@@ -354,7 +362,7 @@ std::vector<Transaction_t> Database_Project::get_transactions_without_label()
                           nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
 
@@ -387,7 +395,7 @@ std::vector<Label_t> Database_Project::get_labels()
     auto r = sqlite3_exec(m_db, "SELECT * FROM Label;", &get_labels_cb, &labels, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
 
@@ -420,7 +428,7 @@ std::vector<Category_t> Database_Project::get_categories()
         sqlite3_exec(m_db, "SELECT * FROM Category;", &get_categories_cb, &categories, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return {};
     }
 
@@ -434,7 +442,7 @@ bool Database_Project::set_bank_name(std::uint32_t id, const std::string& name)
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -447,7 +455,7 @@ bool Database_Project::set_account_name(const std::string& number, const std::st
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -461,7 +469,7 @@ bool Database_Project::set_account_balance(const std::string& number, double bal
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -475,7 +483,7 @@ bool Database_Project::set_transaction_label(const std::string fitid, const std:
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -488,7 +496,7 @@ bool Database_Project::set_label_category(const std::string& label, const std::s
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -501,7 +509,7 @@ bool Database_Project::add_label(const std::string& name)
     auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
     return true;
@@ -521,7 +529,7 @@ void Database_Project::create_table_bank()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         sqlite3_close(m_db);
     }
 }
@@ -543,7 +551,7 @@ void Database_Project::create_table_account()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         sqlite3_close(m_db);
     }
 }
@@ -568,7 +576,7 @@ void Database_Project::create_table_transaction()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         sqlite3_close(m_db);
     }
 }
@@ -587,7 +595,7 @@ void Database_Project::create_table_category()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         sqlite3_close(m_db);
     }
 }
@@ -604,7 +612,7 @@ void Database_Project::populate_table_category()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 }
 
@@ -623,7 +631,7 @@ void Database_Project::create_table_label()
 
     if(r != SQLITE_OK)
     {
-        cerr << sqlite3_errmsg(m_db) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
         sqlite3_close(m_db);
     }
 }
@@ -640,7 +648,7 @@ void Database_Project::prepare_statements()
                                 nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 
     // Account
@@ -653,7 +661,7 @@ void Database_Project::prepare_statements()
                            nullptr);
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 
     // Transaction
@@ -667,6 +675,6 @@ void Database_Project::prepare_statements()
 
     if(r != SQLITE_OK)
     {
-        cerr << __func__ << ":" << sqlite3_errstr(r) << endl;
+        spdlog::error("{}", sqlite3_errstr(r));
     }
 }

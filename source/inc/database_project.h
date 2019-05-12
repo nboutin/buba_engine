@@ -9,7 +9,8 @@
 
 #include "buba.h"
 
-#include <sqlite3.h>
+#include "spdlog/fmt/ostr.h"
+#include "sqlite3.h"
 
 #include <string>
 #include <vector>
@@ -17,6 +18,17 @@
 namespace buba
 {
 enum class db_connection_e { OPEN, CREATE };
+
+template<typename OStream>
+OStream& operator<<(OStream& os, const db_connection_e& c)
+{
+    switch(c)
+    {
+    case db_connection_e::OPEN: return os << "open";
+    case db_connection_e::CREATE: return os << "create";
+    }
+    return os;
+}
 
 class Database_Project
 {

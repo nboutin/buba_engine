@@ -10,7 +10,8 @@ target_include_directories(${PROJECT_NAME}
 	PUBLIC interface
 	PRIVATE inc external)
 
-target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic -Wold-style-cast -Wshadow)
+# -Wshadow
+target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic -Wold-style-cast)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     VERSION ${PROJECT_VERSION}

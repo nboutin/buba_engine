@@ -13,7 +13,6 @@
 #include "spdlog/spdlog.h"
 
 #include <cstdlib>
-#include <iostream>
 #include <string>
 
 using namespace std;
@@ -24,6 +23,7 @@ Budget_Battle::Budget_Battle()
     auto file_logger = spdlog::basic_logger_mt("main", "/tmp/bubap.log");
     spdlog::set_default_logger(file_logger);
     spdlog::set_level(spdlog::level::debug);
+    spdlog::flush_every(std::chrono::seconds(1));
 
     spdlog::info("Starting Budget Battle library");
 }
