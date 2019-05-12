@@ -24,6 +24,7 @@
 - [ ] Add unit test
 - [ ] Add logging mechanism
 - [ ] Add control on column name when SELECT
+- [ ] Check return function of libofx
 - [x] Add project close interface
 - [x] Rename table operation to transaction
 
