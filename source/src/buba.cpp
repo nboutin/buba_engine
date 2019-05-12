@@ -66,6 +66,14 @@ std::vector<Transaction_t> Budget_Battle::get_transactions() const
     return m_dbp->get_transactions();
 }
 
+std::vector<Transaction_t> Budget_Battle::get_transactions_without_label() const
+{
+    if(!m_dbp)
+        return {};
+
+    return m_dbp->get_transactions_without_label();
+}
+
 std::vector<Label_t> Budget_Battle::get_labels() const
 {
     if(!m_dbp)

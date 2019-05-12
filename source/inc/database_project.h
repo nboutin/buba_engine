@@ -38,6 +38,7 @@ public:
     std::vector<Bank_t> get_banks();
     std::vector<Account_t> get_accounts();
     std::vector<Transaction_t> get_transactions();    // TODO return a map ?
+    std::vector<Transaction_t> get_transactions_without_label();
     std::vector<Label_t> get_labels();
     std::vector<Category_t> get_categories();
 

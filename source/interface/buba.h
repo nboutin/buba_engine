@@ -65,6 +65,7 @@ public:
     std::vector<Bank_t> get_banks() const;
     std::vector<Account_t> get_accounts() const;
     std::vector<Transaction_t> get_transactions() const;
+    std::vector<Transaction_t> get_transactions_without_label() const;
     std::vector<Label_t> get_labels() const;
     std::vector<Category_t> get_categories() const;
 

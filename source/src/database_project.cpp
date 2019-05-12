@@ -343,6 +343,24 @@ std::vector<buba::Transaction_t> Database_Project::get_transactions()
     return transactions;
 }
 
+std::vector<Transaction_t> Database_Project::get_transactions_without_label()
+{
+    vector<Transaction_t> transactions;
+
+    auto r = sqlite3_exec(m_db,
+                          "SELECT * FROM [Transaction] WHERE label_name IS NULL;",
+                          &get_transactions_cb,
+                          &transactions,
+                          nullptr);
+    if(r != SQLITE_OK)
+    {
+        cerr << sqlite3_errstr(r) << endl;
+        return {};
+    }
+
+    return transactions;
+}
+
 int get_labels_cb(void* context, int n_column, char** columns_data, char** columns_name)
 {
     (void) n_column;
