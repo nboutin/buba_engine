@@ -10,7 +10,7 @@ add_executable(${PROJECT_NAME}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE inc)
-target_include_directories(${PROJECT_NAME} PRIVATE external/spdlog)
+target_include_directories(${PROJECT_NAME} PRIVATE external)
 
 target_compile_options(${PROJECT_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic -Wold-style-cast -Wshadow)
 
