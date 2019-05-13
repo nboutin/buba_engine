@@ -24,7 +24,9 @@ Budget_Battle::Budget_Battle()
     spdlog::set_default_logger(file_logger);
     spdlog::set_level(spdlog::level::debug);
     spdlog::flush_every(std::chrono::seconds(1));
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S:%e][%n][%-5l] %v");
 
+    spdlog::info("");
     spdlog::info("Starting Budget Battle library");
 }
 
