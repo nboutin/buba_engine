@@ -18,17 +18,12 @@
 using namespace std;
 using namespace buba;
 
-Budget_Battle::Budget_Battle()
-{
-    auto file_logger = spdlog::basic_logger_mt("main", "/tmp/bubap.log");
-    spdlog::set_default_logger(file_logger);
-    spdlog::set_level(spdlog::level::debug);
-    spdlog::flush_every(std::chrono::seconds(1));
-    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S:%e][%n][%-5l] %v");
+constexpr auto LOG_FOLDER = "log";
+constexpr auto LOG_FILE   = "bubap.log";
+const auto LOG_PATHNAME   = "./"s + LOG_FOLDER + "/" + LOG_FILE;
+const auto LOG_MKDIR      = "mkdir - p"s + LOG_FOLDER;
 
-    spdlog::info("");
-    spdlog::info("Starting Budget Battle library");
-}
+Budget_Battle::Budget_Battle() { configure_loggers(); }
 
 Budget_Battle::~Budget_Battle() {}
 
@@ -171,4 +166,28 @@ bool Budget_Battle::add_label(const std::string& name)
         return false;
 
     return m_dbp->add_label(name);
+}
+
+void Budget_Battle::configure_loggers()
+{
+    std::system(LOG_MKDIR.c_str());
+    auto file_logger = spdlog::basic_logger_mt("buba", LOG_PATHNAME);
+    spdlog::set_default_logger(file_logger);
+
+    spdlog::set_level(spdlog::level::debug);
+    spdlog::flush_every(std::chrono::seconds(1));
+    spdlog::set_pattern("[%Y-%m-%d %H:%M:%S:%e][%n][%-5l] %v");
+
+    //    auto sink_file_shared = std::make_shared<spdlog::sinks::basic_file_sink_mt>(LOG_PATHNAME);
+    //
+    //    auto buba_logger = std::make_shared<spdlog::logger>("buba", sink_file_shared);
+    //    auto dbp_logger  = std::make_shared<spdlog::logger>("db_project", sink_file_shared);
+    //    auto ofx_logger  = std::make_shared<spdlog::logger>("ofx", sink_file_shared);
+    //
+    //    spdlog::register_logger(buba_logger);
+    //    spdlog::register_logger(dbp_logger);
+    //    spdlog::register_logger(ofx_logger);
+
+    spdlog::info("");
+    spdlog::info("Starting Budget Battle library");
 }

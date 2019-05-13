@@ -77,6 +77,8 @@ public:
     bool add_label(const std::string& name);
 
 private:
+    void configure_loggers();
+
     std::unique_ptr<Database_Project> m_dbp;
 };
 }
