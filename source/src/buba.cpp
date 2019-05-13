@@ -23,9 +23,15 @@ constexpr auto LOG_FILE   = "bubap.log";
 const auto LOG_PATHNAME   = "./"s + LOG_FOLDER + "/" + LOG_FILE;
 const auto LOG_MKDIR      = "mkdir -p "s + LOG_FOLDER;
 
-Budget_Battle::Budget_Battle() { configure_loggers(); }
+Budget_Battle::Budget_Battle()
+{
+    configure_loggers();
 
-Budget_Battle::~Budget_Battle() {}
+    spdlog::info("");
+    spdlog::info("Starting Budget Battle library");
+}
+
+Budget_Battle::~Budget_Battle() { spdlog::info("Ending Budget Battle library"); }
 
 bool Budget_Battle::project_create(const std::string& pathname)
 {
@@ -187,7 +193,4 @@ void Budget_Battle::configure_loggers()
     //    spdlog::register_logger(buba_logger);
     //    spdlog::register_logger(dbp_logger);
     //    spdlog::register_logger(ofx_logger);
-
-    spdlog::info("");
-    spdlog::info("Starting Budget Battle library");
 }
