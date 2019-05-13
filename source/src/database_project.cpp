@@ -30,12 +30,13 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
 
     if(connection == db_connection_e::CREATE)
     {
-        create_table_transaction();
-        create_table_category();
-        populate_table_category();
-        create_table_label();
+        // Table creation order must respect dependencies
         create_table_bank();
         create_table_account();
+        create_table_category();
+        create_table_label();
+        create_table_transaction();
+        populate_table_category();
     }
 
     prepare_statements();

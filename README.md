@@ -25,6 +25,7 @@
 - [ ] Add logging mechanism
 - [ ] Add control on column name when SELECT
 - [ ] Check return function of libofx
+- [ ] Create table if not exist
 - [x] Add project close interface
 - [x] Rename table operation to transaction
 
