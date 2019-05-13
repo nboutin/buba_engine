@@ -21,7 +21,7 @@ using namespace buba;
 constexpr auto LOG_FOLDER = "log";
 constexpr auto LOG_FILE   = "bubap.log";
 const auto LOG_PATHNAME   = "./"s + LOG_FOLDER + "/" + LOG_FILE;
-const auto LOG_MKDIR      = "mkdir - p"s + LOG_FOLDER;
+const auto LOG_MKDIR      = "mkdir -p "s + LOG_FOLDER;
 
 Budget_Battle::Budget_Battle() { configure_loggers(); }
 
