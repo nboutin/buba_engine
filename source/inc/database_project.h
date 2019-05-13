@@ -57,12 +57,13 @@ public:
     bool set_bank_name(std::uint32_t id, const std::string& name);
     bool set_account_name(const std::string& number, const std::string& name);
     bool set_account_balance(const std::string& number, double balance);
-    bool set_transaction_label(const std::string fitid, const std::string& label_name);
+    bool set_transaction_label(const std::string& fitid, const std::string& label_name);
     bool set_label_category(const std::string& label, const std::string& category);
 
     bool add_label(const std::string& name);
 
 private:
+    void use_foreign_keys();
     void create_table_transaction();
     void create_table_category();
     void create_table_label();

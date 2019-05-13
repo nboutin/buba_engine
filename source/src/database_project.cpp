@@ -30,13 +30,14 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
 
     if(connection == db_connection_e::CREATE)
     {
-        // Table creation order must respect dependencies
         create_table_bank();
         create_table_account();
         create_table_category();
         create_table_label();
         create_table_transaction();
         populate_table_category();
+
+        use_foreign_keys();
     }
 
     prepare_statements();
@@ -502,7 +503,8 @@ bool Database_Project::set_account_balance(const std::string& number, double bal
     return true;
 }
 
-bool Database_Project::set_transaction_label(const std::string fitid, const std::string& label_name)
+bool Database_Project::set_transaction_label(const std::string& fitid,
+                                             const std::string& label_name)
 {
     spdlog::info("{} {} {}", __func__, fitid, label_name);
 
@@ -546,6 +548,18 @@ bool Database_Project::add_label(const std::string& name)
         return false;
     }
     return true;
+}
+
+void Database_Project::use_foreign_keys()
+{
+    spdlog::info("{}", __func__);
+
+    auto r = sqlite3_exec(m_db, "PRAGMA foreign_keys = 1;", nullptr, nullptr, nullptr);
+    if(r != SQLITE_OK)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+        sqlite3_close(m_db);
+    }
 }
 
 void Database_Project::create_table_bank()
@@ -598,16 +612,16 @@ void Database_Project::create_table_transaction()
     spdlog::info("{}", __func__);
 
     auto r = sqlite3_exec(m_db,
-                          "CREATE TABLE [Transaction]("
-                          "fitid TEXT NOT NULL, "
-                          "date TEXT NOT NULL, "
-                          "description TEXT NOT NULL, "
-                          "amount REAL NOT NULL, "
-                          "account_number TEXT NOT NULL, "
-                          "label_name TEXT, "
-                          "PRIMARY KEY(fitid), "
-                          "FOREIGN KEY (account_number) REFERENCES Account(number), "
-                          "FOREIGN KEY (label_name) REFERENCES Label(name)"
+                          "CREATE TABLE [Transaction] ("
+                          "fitid          TEXT NOT NULL, "
+                          "date           TEXT NOT NULL, "
+                          "description    TEXT NOT NULL, "
+                          "amount         REAL NOT NULL, "
+                          "account_number TEXT NOT NULL REFERENCES Account (number), "
+                          "label_name     TEXT REFERENCES Label (name), "
+                          "PRIMARY KEY (fitid), "
+                          "FOREIGN KEY (account_number) REFERENCES Account (number), "
+                          "FOREIGN KEY (label_name) REFERENCES Label (name)"
                           ");",
                           nullptr,
                           nullptr,
