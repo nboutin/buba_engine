@@ -1,6 +1,9 @@
 # BuBa_engine
 
 ## Roadmap Features 
+### 0.3.0 [Not Started]
+- [ ] Define goals list
+
 ### 0.2.0 [Not Started]
 - [ ] Assign amout to territory
 - [ ] Synchro with online bank
@@ -22,10 +25,11 @@
 - [ ] Add License file
 - [ ] Update all header file doxygen header
 - [ ] Add unit test
-- [ ] Add logging mechanism
 - [ ] Add control on column name when SELECT
 - [ ] Check return function of libofx
 - [ ] Create table if not exist
+- [x] Add print account balance
+- [x] Add logging mechanism
 - [x] Add project close interface
 - [x] Rename table operation to transaction
 
