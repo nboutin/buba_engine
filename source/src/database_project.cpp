@@ -36,10 +36,9 @@ Database_Project::Database_Project(const std::string& pathname, db_connection_e 
         create_table_label();
         create_table_transaction();
         populate_table_category();
-
-        use_foreign_keys();
     }
 
+    use_foreign_keys();
     prepare_statements();
 }
 
