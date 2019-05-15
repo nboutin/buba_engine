@@ -402,7 +402,7 @@ std::vector<Label_t> Database_Project::get_labels()
 
     vector<Label_t> labels;
 
-    auto r = sqlite3_exec(m_db, "SELECT * FROM Label;", &get_labels_cb, &labels, nullptr);
+    auto r = sqlite3_exec(m_db, "SELECT * FROM Label ORDER BY name ASC;", &get_labels_cb, &labels, nullptr);
     if(r != SQLITE_OK)
     {
         spdlog::error("{}", sqlite3_errstr(r));
