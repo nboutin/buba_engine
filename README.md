@@ -10,6 +10,9 @@
 - [ ] Automatic category assignement for transaction
 - [ ] Check account balance imported against computed
 
+#### Dev
+- [ ] Prepare sqlite statement to avoid injection
+
 ### 0.1.0 [In Progress]
 - [x] Create/Open Buba project
 - [x] Import OFX (Transactions, Account, Bank)

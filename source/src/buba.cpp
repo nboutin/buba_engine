@@ -57,6 +57,9 @@ bool Budget_Battle::import_ofx(const std::string& pathname)
 {
     spdlog::info("{} {}", __func__, pathname);
 
+    if(!m_dbp)
+        return false;
+
     Importer_OFX importer;
 
     importer.process(pathname, m_dbp);
