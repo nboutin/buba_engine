@@ -26,20 +26,24 @@ bool Importer_OFX::process(const std::string& pathname, std::unique_ptr<Database
     ofx_set_transaction_cb(m_context, &transaction_cb, dbp.get());
     ofx_set_statement_cb(m_context, &statement_cb, dbp.get());
 
-    libofx_proc_file(m_context, pathname.c_str(), OFX);
+    auto r = libofx_proc_file(m_context, pathname.c_str(), OFX);
+    spdlog::debug("libofx_proc_file {}", r);
 
-    return true;
+    if(r == 0)
+        return true;
+    else
+        return false;
 }
 
 int account_cb(const struct OfxAccountData data, void* context)
 {
     Database_Project* dbp = reinterpret_cast<Database_Project*>(context);
 
-    spdlog::debug("|{}|", data.branch_id);
+    spdlog::debug("{}|{}|", __func__, data.branch_id);
     int bank_id = std::stoi(data.branch_id);
     dbp->insert_bank(bank_id, "");
 
-    spdlog::debug("|{}|{}|", data.account_number, data.branch_id);
+    spdlog::debug("{}|{}|{}|", __func__, data.account_number, data.branch_id);
     dbp->insert_account(data.account_number, "", bank_id);
 
     return 0;
@@ -52,7 +56,8 @@ int transaction_cb(const struct OfxTransactionData data, void* context)
     char date[64];
     strftime(date, 64, "%Y%m%d", std::localtime(&data.date_posted));
 
-    spdlog::debug("|{}|{}|{}|{}|{}|",
+    spdlog::debug("{}|{}|{}|{}|{}|{}|",
+                  __func__,
                   data.fi_id,
                   date,
                   data.name,
@@ -73,7 +78,7 @@ int statement_cb(const struct OfxStatementData data, void* context)
     Database_Project* dbp = reinterpret_cast<Database_Project*>(context);
     (void) dbp;
 
-    spdlog::debug("|{}|{}|", data.account_ptr->account_number, data.ledger_balance);
+    spdlog::debug("{}|{}|{}|", __func__, data.account_ptr->account_number, data.ledger_balance);
     dbp->set_account_balance(data.account_ptr->account_number, data.ledger_balance);
 
     return 0;
