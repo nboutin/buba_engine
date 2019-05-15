@@ -9,6 +9,7 @@
 - [ ] Synchro with online bank
 - [ ] Automatic category assignement for transaction
 - [ ] Check account balance imported against computed
+- [ ] Store label sorted by name
 
 #### Dev
 - [ ] Prepare sqlite statement to avoid injection
