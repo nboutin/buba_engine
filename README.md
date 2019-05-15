@@ -19,8 +19,8 @@
 - [x] Assign label to transaction
 - [x] Assign category to label
 - [x] Import account balance from OFX
-- [ ] Display monthly spending of category percent and value
-- [ ] Display monthly average income
+- [ ] Get monthly spending of category percent and value
+- [ ] Get monthly average income
 
 #### Dev
 - [x] Add print account balance
@@ -29,7 +29,8 @@
 - [x] Rename table operation to transaction
 - [x] Check return function of libofx
 - [ ] Add default special label (movement)
-- [ ] Add default special category (income)
+- [ ] Add default standard label (savings)
+- [ ] Add default special category (income) (check that value is positive)
 - [ ] Add License file
 - [ ] Update all header file doxygen header
 - [ ] Add unit test

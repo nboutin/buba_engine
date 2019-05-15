@@ -17,6 +17,8 @@
 | 							|
 |===
 
+## Idea to define
+* Decided what savings are for
 
 ## Use case
 
