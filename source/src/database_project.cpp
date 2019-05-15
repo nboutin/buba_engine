@@ -64,6 +64,12 @@ Database_Project::~Database_Project()
         spdlog::error("{}", sqlite3_errstr(r));
     }
 
+    r = sqlite3_finalize(m_stmt_set_transaction_label);
+    if(r != SQLITE_OK)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+    }
+
     r = sqlite3_close(m_db);
     if(r != SQLITE_OK)
     {
@@ -105,11 +111,6 @@ bool Database_Project::insert_bank(std::uint32_t id, const std::string& name)
     {
         spdlog::error("{}", sqlite3_errstr(r));
         return false;
-        //    	if(r != SQLITE_CONSTRAINT)
-        //        {
-        //            cerr << sqlite3_errstr(r) << endl;
-        //            return false;
-        //        }
     }
 
     return true;
@@ -163,11 +164,6 @@ bool Database_Project::insert_account(const std::string& number,
     {
         spdlog::error("{}", sqlite3_errstr(r));
         return false;
-        //        if(r != SQLITE_CONSTRAINT)
-        //        {
-        //            cerr << sqlite3_errstr(r) << endl;
-        //            return false;
-        //        }
     }
 
     return true;
@@ -250,11 +246,6 @@ bool Database_Project::insert_transaction(const std::string& fitid,
     {
         spdlog::error("{}", sqlite3_errstr(r));
         return false;
-        //        if(r != SQLITE_CONSTRAINT)
-        //        {
-        //            cerr << sqlite3_errstr(r) << endl;
-        //            return false;
-        //        }
     }
 
     return true;
@@ -507,15 +498,45 @@ bool Database_Project::set_transaction_label(const std::string& fitid,
 {
     spdlog::info("{} {} {}", __func__, fitid, label_name);
 
-    auto request =
-        "UPDATE [Transaction] SET label_name='" + label_name + "' WHERE fitid='" + fitid + "';";
-
-    auto r = sqlite3_exec(m_db, request.c_str(), nullptr, nullptr, nullptr);
+    auto r = sqlite3_reset(m_stmt_set_transaction_label);
     if(r != SQLITE_OK)
     {
         spdlog::error("{}", sqlite3_errstr(r));
         return false;
     }
+
+    // Label
+    r = sqlite3_bind_text(m_stmt_set_transaction_label,
+                          1,
+                          label_name.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+    }
+
+    // FITID
+    r = sqlite3_bind_text(m_stmt_set_transaction_label,
+                          2,
+                          fitid.c_str(),
+                          -1,
+                          reinterpret_cast<sqlite3_destructor_type>(-1));
+    if(r != SQLITE_OK)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+    }
+
+    // Execute
+    r = sqlite3_step(m_stmt_set_transaction_label);
+    if(r != SQLITE_DONE)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+        return false;
+    }
+
     return true;
 }
 
@@ -620,7 +641,7 @@ void Database_Project::create_table_transaction()
                           "label_name     TEXT REFERENCES Label (name), "
                           "PRIMARY KEY (fitid), "
                           "FOREIGN KEY (account_number) REFERENCES Account (number), "
-                          "FOREIGN KEY (label_name) REFERENCES Label (name)"
+                          "FOREIGN KEY (label_name) REFERENCES Label (name) ON UPDATE CASCADE"
                           ");",
                           nullptr,
                           nullptr,
@@ -732,7 +753,19 @@ void Database_Project::prepare_statements()
                            -1,
                            &m_stmt_insert_transaction,
                            nullptr);
+    if(r != SQLITE_OK)
+    {
+        spdlog::error("{}", sqlite3_errstr(r));
+    }
 
+    // Set transaction label
+    r = sqlite3_prepare_v2(m_db,
+                           "UPDATE [Transaction] "
+                           "SET label_name=?1 "
+                           "WHERE fitid=?2;",
+                           -1,
+                           &m_stmt_set_transaction_label,
+                           nullptr);
     if(r != SQLITE_OK)
     {
         spdlog::error("{}", sqlite3_errstr(r));

@@ -73,9 +73,10 @@ private:
     void populate_table_category();
     void prepare_statements();
 
-    sqlite3* m_db                           = nullptr;
-    sqlite3_stmt* m_stmt_insert_bank        = nullptr;
-    sqlite3_stmt* m_stmt_insert_account     = nullptr;
-    sqlite3_stmt* m_stmt_insert_transaction = nullptr;
+    sqlite3* m_db                              = nullptr;
+    sqlite3_stmt* m_stmt_insert_bank           = nullptr;
+    sqlite3_stmt* m_stmt_insert_account        = nullptr;
+    sqlite3_stmt* m_stmt_insert_transaction    = nullptr;
+    sqlite3_stmt* m_stmt_set_transaction_label = nullptr;
 };
 }
