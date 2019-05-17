@@ -34,3 +34,19 @@
 |Lifestyle	|Vetements, Coiffeur, Sport, Animaux, Cadeaux
 |Optional	|Restaurant, Films, Jeux, Bien-etre spéciale
 |===
+
+
+## Category 2
+
+* Alimentation
+* Alcool & tabac
+* Vetements
+* Logement
+* Mobilier & Equipement
+* Santé & bien-etre
+* Transport
+* Communication
+* Loisirs et Culture
+* Enseignement
+* Restaurant & Hotel
+* Bien et Service
